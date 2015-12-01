@@ -25,9 +25,9 @@ Pod::Spec.new do |s|
              LICENSE
   }
   s.author       = { "Pixate" => "info@pixate.com" }
-  s.platform     = :ios, '8.0'
+  s.platform     = :ios, '7.0'
   s.source       = {
-        :git => "https://github.com/anton-matosov/pixate-freestyle-ios.git",
+        :git => "https://github.com/smartapps-fr/pixate-freestyle-ios.git",
         :tag => s.version.to_s
   }
 
@@ -43,7 +43,7 @@ Pod::Spec.new do |s|
   # This code was moved to subspec as it uses MMR while the rest of the project ARC
   s.subspec 'MAFuture' do |ss|
     ss.prefix_header_file = "src/pixate-freestyle-Prefix.pch"
-    ss.source_files = 'src/Kernel/Third-Party/MAFuture/*.{h,m}'
+    ss.source_files = 'src/Kernel/Third-Party/MAFuture/MA*.{h,m}'
     ss.requires_arc = false
   end
 
