@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		9C11F21C18F75986009BF633 /* libpixate-freestyle.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C11F21318F75981009BF633 /* libpixate-freestyle.a */; };
 		9CF1463F18F7132E00B36A92 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CF1463E18F7132E00B36A92 /* Foundation.framework */; };
 		9CF1464118F7132E00B36A92 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CF1464018F7132E00B36A92 /* CoreGraphics.framework */; };
 		9CF1464318F7132E00B36A92 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CF1464218F7132E00B36A92 /* UIKit.framework */; };
@@ -25,41 +24,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		9C11F21218F75981009BF633 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9C11F20A18F75981009BF633 /* pixate-freestyle.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 9C84A63A18AE9CB600E7CDA7;
-			remoteInfo = "pixate-freestyle";
-		};
-		9C11F21418F75981009BF633 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9C11F20A18F75981009BF633 /* pixate-freestyle.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 9C84A64A18AE9CB600E7CDA7;
-			remoteInfo = "pixate-freestyleTests";
-		};
-		9C11F21618F75981009BF633 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9C11F20A18F75981009BF633 /* pixate-freestyle.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 9CAE288218C4343B005B06B5;
-			remoteInfo = "pixate-freestyle-mac";
-		};
-		9C11F21818F75981009BF633 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9C11F20A18F75981009BF633 /* pixate-freestyle.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 9CAE288F18C4343B005B06B5;
-			remoteInfo = "pixate-freestyle-macTests";
-		};
-		9C11F21A18F75981009BF633 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9C11F20A18F75981009BF633 /* pixate-freestyle.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 9C23049518DA27CE00969D18;
-			remoteInfo = MAFutureTest;
-		};
 		9CF1466118F7132E00B36A92 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 9CF1463318F7132E00B36A92 /* Project object */;
@@ -70,7 +34,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		9C11F20A18F75981009BF633 /* pixate-freestyle.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "pixate-freestyle.xcodeproj"; path = "../../src/pixate-freestyle.xcodeproj"; sourceTree = "<group>"; };
+		7C22DC321C16E47D006F7A9F /* Pods.debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "../Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		7C22DC331C16E47D006F7A9F /* Pods.release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "../Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		9CF1463B18F7132E00B36A92 /* UINavigationBar-NF.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "UINavigationBar-NF.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9CF1463E18F7132E00B36A92 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		9CF1464018F7132E00B36A92 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -97,7 +62,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9C11F21C18F75986009BF633 /* libpixate-freestyle.a in Frameworks */,
 				9CF1464118F7132E00B36A92 /* CoreGraphics.framework in Frameworks */,
 				9CF1464318F7132E00B36A92 /* UIKit.framework in Frameworks */,
 				9CF1463F18F7132E00B36A92 /* Foundation.framework in Frameworks */,
@@ -117,18 +81,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		9C11F20B18F75981009BF633 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				9C11F21318F75981009BF633 /* libpixate-freestyle.a */,
-				9C11F21518F75981009BF633 /* pixate-freestyleTests.xctest */,
-				9C11F21718F75981009BF633 /* libpixate-freestyle-mac.a */,
-				9C11F21918F75981009BF633 /* pixate-freestyle-macTests.xctest */,
-				9C11F21B18F75981009BF633 /* MAFutureTest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		9CF1463218F7132E00B36A92 = {
 			isa = PBXGroup;
 			children = (
@@ -136,6 +88,8 @@
 				9CF1466318F7132E00B36A92 /* UINavigationBar-NFTests */,
 				9CF1463D18F7132E00B36A92 /* Frameworks */,
 				9CF1463C18F7132E00B36A92 /* Products */,
+				7C22DC321C16E47D006F7A9F /* Pods.debug.xcconfig */,
+				7C22DC331C16E47D006F7A9F /* Pods.release.xcconfig */,
 			);
 			sourceTree = "<group>";
 		};
@@ -151,7 +105,6 @@
 		9CF1463D18F7132E00B36A92 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				9C11F20A18F75981009BF633 /* pixate-freestyle.xcodeproj */,
 				9CF1463E18F7132E00B36A92 /* Foundation.framework */,
 				9CF1464018F7132E00B36A92 /* CoreGraphics.framework */,
 				9CF1464218F7132E00B36A92 /* UIKit.framework */,
@@ -266,12 +219,6 @@
 			mainGroup = 9CF1463218F7132E00B36A92;
 			productRefGroup = 9CF1463C18F7132E00B36A92 /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = 9C11F20B18F75981009BF633 /* Products */;
-					ProjectRef = 9C11F20A18F75981009BF633 /* pixate-freestyle.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				9CF1463A18F7132E00B36A92 /* UINavigationBar-NF */,
@@ -279,44 +226,6 @@
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		9C11F21318F75981009BF633 /* libpixate-freestyle.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libpixate-freestyle.a";
-			remoteRef = 9C11F21218F75981009BF633 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		9C11F21518F75981009BF633 /* pixate-freestyleTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "pixate-freestyleTests.xctest";
-			remoteRef = 9C11F21418F75981009BF633 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		9C11F21718F75981009BF633 /* libpixate-freestyle-mac.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libpixate-freestyle-mac.a";
-			remoteRef = 9C11F21618F75981009BF633 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		9C11F21918F75981009BF633 /* pixate-freestyle-macTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "pixate-freestyle-macTests.xctest";
-			remoteRef = 9C11F21818F75981009BF633 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		9C11F21B18F75981009BF633 /* MAFutureTest */ = {
-			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.executable";
-			path = MAFutureTest;
-			remoteRef = 9C11F21A18F75981009BF633 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		9CF1463918F7132E00B36A92 /* Resources */ = {
@@ -468,6 +377,7 @@
 		};
 		9CF1466E18F7132E00B36A92 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7C22DC321C16E47D006F7A9F /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -486,6 +396,7 @@
 		};
 		9CF1466F18F7132E00B36A92 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7C22DC331C16E47D006F7A9F /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -504,6 +415,7 @@
 		};
 		9CF1467118F7132E00B36A92 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7C22DC321C16E47D006F7A9F /* Pods.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/UINavigationBar-NF.app/UINavigationBar-NF";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -526,6 +438,7 @@
 		};
 		9CF1467218F7132E00B36A92 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7C22DC331C16E47D006F7A9F /* Pods.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/UINavigationBar-NF.app/UINavigationBar-NF";
 				FRAMEWORK_SEARCH_PATHS = (

@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		711E758C04F55A4104383029 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9FE17EC617D39559B0C4FE74 /* libPods.a */; };
 		9C2CD64F18CCFEF100D6C578 /* default.css in Resources */ = {isa = PBXBuildFile; fileRef = 9C2CD64E18CCFEF100D6C578 /* default.css */; };
-		9C2CD65F18CCFF0E00D6C578 /* libpixate-freestyle.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C2CD65818CCFF0900D6C578 /* libpixate-freestyle.a */; };
 		9C4E0CBD18CBDCE8009C5360 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C4E0CBC18CBDCE8009C5360 /* Foundation.framework */; };
 		9C4E0CBF18CBDCE8009C5360 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C4E0CBE18CBDCE8009C5360 /* CoreGraphics.framework */; };
 		9C4E0CC118CBDCE8009C5360 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C4E0CC018CBDCE8009C5360 /* UIKit.framework */; };
@@ -27,27 +26,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		7C27F7BA1C16E1F10048520C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9C2CD65018CCFF0900D6C578 /* pixate-freestyle.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 9C23049518DA27CE00969D18;
-			remoteInfo = MAFutureTest;
-		};
-		9C2CD65718CCFF0900D6C578 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9C2CD65018CCFF0900D6C578 /* pixate-freestyle.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 9C84A63A18AE9CB600E7CDA7;
-			remoteInfo = "pixate-freestyle";
-		};
-		9C2CD65918CCFF0900D6C578 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9C2CD65018CCFF0900D6C578 /* pixate-freestyle.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 9C84A64A18AE9CB600E7CDA7;
-			remoteInfo = "pixate-freestyleTests";
-		};
 		9C4E0CDF18CBDCE8009C5360 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 9C4E0CB118CBDCE8009C5360 /* Project object */;
@@ -58,9 +36,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		7AAA6D0088741DD8CCD1D8E7 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "../Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		7CDD44AB1C16E702007E9911 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "../Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		7CDD44AC1C16E702007E9911 /* Pods.release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "../Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		9C2CD64E18CCFEF100D6C578 /* default.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = default.css; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.css; };
-		9C2CD65018CCFF0900D6C578 /* pixate-freestyle.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "pixate-freestyle.xcodeproj"; path = "../../src/pixate-freestyle.xcodeproj"; sourceTree = "<group>"; };
 		9C4E0CB918CBDCE8009C5360 /* UILabelTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UILabelTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9C4E0CBC18CBDCE8009C5360 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		9C4E0CBE18CBDCE8009C5360 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -81,7 +59,6 @@
 		9C4E0CE518CBDCE8009C5360 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		9C4E0CE718CBDCE8009C5360 /* UILabelTestTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UILabelTestTests.m; sourceTree = "<group>"; };
 		9FE17EC617D39559B0C4FE74 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		DD4B9D84C1E50A389E3501AE /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "../Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,7 +66,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9C2CD65F18CCFF0E00D6C578 /* libpixate-freestyle.a in Frameworks */,
 				9C4E0CBF18CBDCE8009C5360 /* CoreGraphics.framework in Frameworks */,
 				9C4E0CC118CBDCE8009C5360 /* UIKit.framework in Frameworks */,
 				9C4E0CBD18CBDCE8009C5360 /* Foundation.framework in Frameworks */,
@@ -110,16 +86,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		9C2CD65118CCFF0900D6C578 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				9C2CD65818CCFF0900D6C578 /* libpixate-freestyle.a */,
-				9C2CD65A18CCFF0900D6C578 /* pixate-freestyleTests.xctest */,
-				7C27F7BB1C16E1F10048520C /* MAFutureTest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		9C4E0CB018CBDCE8009C5360 = {
 			isa = PBXGroup;
 			children = (
@@ -143,7 +109,6 @@
 		9C4E0CBB18CBDCE8009C5360 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				9C2CD65018CCFF0900D6C578 /* pixate-freestyle.xcodeproj */,
 				9C4E0CBC18CBDCE8009C5360 /* Foundation.framework */,
 				9C4E0CBE18CBDCE8009C5360 /* CoreGraphics.framework */,
 				9C4E0CC018CBDCE8009C5360 /* UIKit.framework */,
@@ -200,8 +165,8 @@
 		9DE28C54E780775324D1BEA0 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				7AAA6D0088741DD8CCD1D8E7 /* Pods.debug.xcconfig */,
-				DD4B9D84C1E50A389E3501AE /* Pods.release.xcconfig */,
+				7CDD44AB1C16E702007E9911 /* Pods.debug.xcconfig */,
+				7CDD44AC1C16E702007E9911 /* Pods.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -272,12 +237,6 @@
 			mainGroup = 9C4E0CB018CBDCE8009C5360;
 			productRefGroup = 9C4E0CBA18CBDCE8009C5360 /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = 9C2CD65118CCFF0900D6C578 /* Products */;
-					ProjectRef = 9C2CD65018CCFF0900D6C578 /* pixate-freestyle.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				9C4E0CB818CBDCE8009C5360 /* UILabelTest */,
@@ -285,30 +244,6 @@
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		7C27F7BB1C16E1F10048520C /* MAFutureTest */ = {
-			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.executable";
-			path = MAFutureTest;
-			remoteRef = 7C27F7BA1C16E1F10048520C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		9C2CD65818CCFF0900D6C578 /* libpixate-freestyle.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libpixate-freestyle.a";
-			remoteRef = 9C2CD65718CCFF0900D6C578 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		9C2CD65A18CCFF0900D6C578 /* pixate-freestyleTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "pixate-freestyleTests.xctest";
-			remoteRef = 9C2CD65918CCFF0900D6C578 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		9C4E0CB718CBDCE8009C5360 /* Resources */ = {
@@ -360,7 +295,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "set -x\ndiff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		C4598D04164BD000ADC59828 /* Copy Pods Resources */ = {
@@ -509,7 +444,7 @@
 		};
 		9C4E0CEC18CBDCE8009C5360 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7AAA6D0088741DD8CCD1D8E7 /* Pods.debug.xcconfig */;
+			baseConfigurationReference = 7CDD44AB1C16E702007E9911 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -528,7 +463,7 @@
 		};
 		9C4E0CED18CBDCE8009C5360 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = DD4B9D84C1E50A389E3501AE /* Pods.release.xcconfig */;
+			baseConfigurationReference = 7CDD44AC1C16E702007E9911 /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -547,6 +482,7 @@
 		};
 		9C4E0CEF18CBDCE8009C5360 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7CDD44AB1C16E702007E9911 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/UILabelTest.app/UILabelTest";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -569,6 +505,7 @@
 		};
 		9C4E0CF018CBDCE8009C5360 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7CDD44AC1C16E702007E9911 /* Pods.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/UILabelTest.app/UILabelTest";
 				FRAMEWORK_SEARCH_PATHS = (
