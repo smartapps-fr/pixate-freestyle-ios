@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7CDD44B01C16EF62007E9911 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CDD44AF1C16EF62007E9911 /* libPods.a */; };
+		7CDD44B31C16EF6F007E9911 /* libCocoaLumberjack.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CDD44B11C16EF6E007E9911 /* libCocoaLumberjack.a */; };
+		7CDD44B41C16EF6F007E9911 /* libPixateFreestyle.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CDD44B21C16EF6F007E9911 /* libPixateFreestyle.a */; };
 		9C34A3DA1833207D002F2420 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C34A3D91833207D002F2420 /* Foundation.framework */; };
 		9C34A3DC1833207D002F2420 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C34A3DB1833207D002F2420 /* CoreGraphics.framework */; };
 		9C34A3DE1833207D002F2420 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C34A3DD1833207D002F2420 /* UIKit.framework */; };
@@ -410,6 +413,9 @@
 /* Begin PBXFileReference section */
 		7C22DC371C16E482006F7A9F /* Pods.debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "../Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		7C22DC381C16E482006F7A9F /* Pods.release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "../Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		7CDD44AF1C16EF62007E9911 /* libPods.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libPods.a; path = "/Users/amatosov.ctr/Develop/pixate-freestyle-ios/tests/Pods/../build/Debug-iphoneos/libPods.a"; sourceTree = "<absolute>"; };
+		7CDD44B11C16EF6E007E9911 /* libCocoaLumberjack.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libCocoaLumberjack.a; path = "/Users/amatosov.ctr/Develop/pixate-freestyle-ios/tests/Pods/../build/Debug-iphoneos/libCocoaLumberjack.a"; sourceTree = "<absolute>"; };
+		7CDD44B21C16EF6F007E9911 /* libPixateFreestyle.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libPixateFreestyle.a; path = "/Users/amatosov.ctr/Develop/pixate-freestyle-ios/tests/Pods/../build/Debug-iphoneos/libPixateFreestyle.a"; sourceTree = "<absolute>"; };
 		9C34A3D61833207D002F2420 /* IconGallery.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IconGallery.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9C34A3D91833207D002F2420 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		9C34A3DB1833207D002F2420 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -814,6 +820,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7CDD44B31C16EF6F007E9911 /* libCocoaLumberjack.a in Frameworks */,
+				7CDD44B41C16EF6F007E9911 /* libPixateFreestyle.a in Frameworks */,
+				7CDD44B01C16EF62007E9911 /* libPods.a in Frameworks */,
 				9C34A3DC1833207D002F2420 /* CoreGraphics.framework in Frameworks */,
 				9C34A3DE1833207D002F2420 /* UIKit.framework in Frameworks */,
 				9C34A3DA1833207D002F2420 /* Foundation.framework in Frameworks */,
@@ -858,6 +867,9 @@
 		9C34A3D81833207D002F2420 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7CDD44B11C16EF6E007E9911 /* libCocoaLumberjack.a */,
+				7CDD44B21C16EF6F007E9911 /* libPixateFreestyle.a */,
+				7CDD44AF1C16EF62007E9911 /* libPods.a */,
 				9C34A3D91833207D002F2420 /* Foundation.framework */,
 				9C34A3DB1833207D002F2420 /* CoreGraphics.framework */,
 				9C34A3DD1833207D002F2420 /* UIKit.framework */,
@@ -1840,7 +1852,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -1879,7 +1890,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -1916,20 +1926,9 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/Pixate_Engine-cxbqfllitlqcspcaxewxldmpknhu/Build/Products/Debug-iphoneos",
-					"/Users/pcolton/Development/Pixate/products/pixate-freestyle-ios/build",
-				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "IconGallery/IconGallery-Prefix.pch";
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"../src/**",
-				);
 				INFOPLIST_FILE = "IconGallery/IconGallery-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -1946,20 +1945,9 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/Pixate_Engine-cxbqfllitlqcspcaxewxldmpknhu/Build/Products/Debug-iphoneos",
-					"/Users/pcolton/Development/Pixate/products/pixate-freestyle-ios/build",
-				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "IconGallery/IconGallery-Prefix.pch";
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"../src/**",
-				);
 				INFOPLIST_FILE = "IconGallery/IconGallery-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
