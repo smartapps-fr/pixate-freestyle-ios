@@ -1,0 +1,13 @@
+workspace 'AllTests'
+xcodeproj 'IconGallery/IconGallery'
+xcodeproj 'ListFonts/ListFonts'
+xcodeproj 'UIButtonTest/UIButtonTest'
+xcodeproj 'UILabelTest/UILabelTest'
+xcodeproj 'UINavigationBar/UINavigationBar'
+xcodeproj 'UINavigationBar-NF/UINavigationBar-NF'
+xcodeproj 'UISliderTest/UISliderTest'
+xcodeproj 'UITableViewTest/UITableViewTest'
+
+platform :ios, '8.1'
+
+  pod 'PixateFreestyle', :path => "../"

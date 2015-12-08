@@ -25,9 +25,17 @@
 		9C2CD6BA18CD00B100D6C578 /* default.css in Resources */ = {isa = PBXBuildFile; fileRef = 9C2CD6B918CD00B100D6C578 /* default.css */; };
 		9C2CD6BD18CD016B00D6C578 /* arrow.svg in Resources */ = {isa = PBXBuildFile; fileRef = 9C2CD6BC18CD016B00D6C578 /* arrow.svg */; };
 		9CBA643818CE67FC0006AE3D /* CustomButtonViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CBA643718CE67FC0006AE3D /* CustomButtonViewController.m */; };
+		C5621975043F5EAAF8EE379A /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D66105761F5C6190DC0D9E8 /* libPods.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		7CE3FCB61C16E24E007CEB37 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9C2CD6A918CD008800D6C578 /* pixate-freestyle.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 9C23049518DA27CE00969D18;
+			remoteInfo = MAFutureTest;
+		};
 		9C2CD69718CD007600D6C578 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 9C2CD66918CD007500D6C578 /* Project object */;
@@ -49,23 +57,10 @@
 			remoteGlobalIDString = 9C84A64A18AE9CB600E7CDA7;
 			remoteInfo = "pixate-freestyleTests";
 		};
-		9C2CD6B418CD008800D6C578 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9C2CD6A918CD008800D6C578 /* pixate-freestyle.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 9CAE288218C4343B005B06B5;
-			remoteInfo = "pixate-freestyle-mac";
-		};
-		9C2CD6B618CD008800D6C578 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9C2CD6A918CD008800D6C578 /* pixate-freestyle.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 9CAE288F18C4343B005B06B5;
-			remoteInfo = "pixate-freestyle-macTests";
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		178C5902A1592680BB7B9B08 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "../Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		9C2CD67118CD007500D6C578 /* UINavigationBar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UINavigationBar.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9C2CD67418CD007500D6C578 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		9C2CD67618CD007500D6C578 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -90,6 +85,8 @@
 		9C2CD6BC18CD016B00D6C578 /* arrow.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = arrow.svg; sourceTree = "<group>"; };
 		9CBA643618CE67FC0006AE3D /* CustomButtonViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomButtonViewController.h; sourceTree = "<group>"; };
 		9CBA643718CE67FC0006AE3D /* CustomButtonViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomButtonViewController.m; sourceTree = "<group>"; };
+		9D66105761F5C6190DC0D9E8 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		AB313AA4276124CF9D8AAE30 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "../Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +98,7 @@
 				9C2CD67718CD007500D6C578 /* CoreGraphics.framework in Frameworks */,
 				9C2CD67918CD007500D6C578 /* UIKit.framework in Frameworks */,
 				9C2CD67518CD007500D6C578 /* Foundation.framework in Frameworks */,
+				C5621975043F5EAAF8EE379A /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -124,6 +122,7 @@
 				9C2CD69918CD007600D6C578 /* UINavigationBarTests */,
 				9C2CD67318CD007500D6C578 /* Frameworks */,
 				9C2CD67218CD007500D6C578 /* Products */,
+				FF49AC13B958D6460CF337B4 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -144,6 +143,7 @@
 				9C2CD67618CD007500D6C578 /* CoreGraphics.framework */,
 				9C2CD67818CD007500D6C578 /* UIKit.framework */,
 				9C2CD69318CD007500D6C578 /* XCTest.framework */,
+				9D66105761F5C6190DC0D9E8 /* libPods.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -200,8 +200,7 @@
 			children = (
 				9C2CD6B118CD008800D6C578 /* libpixate-freestyle.a */,
 				9C2CD6B318CD008800D6C578 /* pixate-freestyleTests.xctest */,
-				9C2CD6B518CD008800D6C578 /* libpixate-freestyle-mac.a */,
-				9C2CD6B718CD008800D6C578 /* pixate-freestyle-macTests.xctest */,
+				7CE3FCB71C16E24E007CEB37 /* MAFutureTest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -214,6 +213,15 @@
 			name = "SVG Assets";
 			sourceTree = "<group>";
 		};
+		FF49AC13B958D6460CF337B4 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				178C5902A1592680BB7B9B08 /* Pods.debug.xcconfig */,
+				AB313AA4276124CF9D8AAE30 /* Pods.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -221,9 +229,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9C2CD6A318CD007600D6C578 /* Build configuration list for PBXNativeTarget "UINavigationBar" */;
 			buildPhases = (
+				06BCD8B5473CCE662F05961C /* Check Pods Manifest.lock */,
 				9C2CD66D18CD007500D6C578 /* Sources */,
 				9C2CD66E18CD007500D6C578 /* Frameworks */,
 				9C2CD66F18CD007500D6C578 /* Resources */,
+				5FFB07C9F7ACDDF40019D381 /* Embed Pods Frameworks */,
+				8C8AB3AA43C391BDA3E3DB28 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -292,6 +303,13 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		7CE3FCB71C16E24E007CEB37 /* MAFutureTest */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = MAFutureTest;
+			remoteRef = 7CE3FCB61C16E24E007CEB37 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		9C2CD6B118CD008800D6C578 /* libpixate-freestyle.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -304,20 +322,6 @@
 			fileType = wrapper.cfbundle;
 			path = "pixate-freestyleTests.xctest";
 			remoteRef = 9C2CD6B218CD008800D6C578 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		9C2CD6B518CD008800D6C578 /* libpixate-freestyle-mac.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libpixate-freestyle-mac.a";
-			remoteRef = 9C2CD6B418CD008800D6C578 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		9C2CD6B718CD008800D6C578 /* pixate-freestyle-macTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "pixate-freestyle-macTests.xctest";
-			remoteRef = 9C2CD6B618CD008800D6C578 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -344,6 +348,54 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		06BCD8B5473CCE662F05961C /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		5FFB07C9F7ACDDF40019D381 /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/../Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		8C8AB3AA43C391BDA3E3DB28 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/../Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		9C2CD66D18CD007500D6C578 /* Sources */ = {
@@ -475,6 +527,7 @@
 		};
 		9C2CD6A418CD007600D6C578 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 178C5902A1592680BB7B9B08 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -493,6 +546,7 @@
 		};
 		9C2CD6A518CD007600D6C578 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = AB313AA4276124CF9D8AAE30 /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;

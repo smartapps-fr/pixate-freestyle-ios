@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		711E758C04F55A4104383029 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9FE17EC617D39559B0C4FE74 /* libPods.a */; };
 		9C2CD64F18CCFEF100D6C578 /* default.css in Resources */ = {isa = PBXBuildFile; fileRef = 9C2CD64E18CCFEF100D6C578 /* default.css */; };
 		9C2CD65F18CCFF0E00D6C578 /* libpixate-freestyle.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C2CD65818CCFF0900D6C578 /* libpixate-freestyle.a */; };
 		9C4E0CBD18CBDCE8009C5360 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C4E0CBC18CBDCE8009C5360 /* Foundation.framework */; };
@@ -26,6 +27,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		7C27F7BA1C16E1F10048520C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9C2CD65018CCFF0900D6C578 /* pixate-freestyle.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 9C23049518DA27CE00969D18;
+			remoteInfo = MAFutureTest;
+		};
 		9C2CD65718CCFF0900D6C578 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 9C2CD65018CCFF0900D6C578 /* pixate-freestyle.xcodeproj */;
@@ -40,20 +48,6 @@
 			remoteGlobalIDString = 9C84A64A18AE9CB600E7CDA7;
 			remoteInfo = "pixate-freestyleTests";
 		};
-		9C2CD65B18CCFF0900D6C578 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9C2CD65018CCFF0900D6C578 /* pixate-freestyle.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 9CAE288218C4343B005B06B5;
-			remoteInfo = "pixate-freestyle-mac";
-		};
-		9C2CD65D18CCFF0900D6C578 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9C2CD65018CCFF0900D6C578 /* pixate-freestyle.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 9CAE288F18C4343B005B06B5;
-			remoteInfo = "pixate-freestyle-macTests";
-		};
 		9C4E0CDF18CBDCE8009C5360 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 9C4E0CB118CBDCE8009C5360 /* Project object */;
@@ -64,6 +58,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		7AAA6D0088741DD8CCD1D8E7 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "../Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		9C2CD64E18CCFEF100D6C578 /* default.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = default.css; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.css; };
 		9C2CD65018CCFF0900D6C578 /* pixate-freestyle.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "pixate-freestyle.xcodeproj"; path = "../../src/pixate-freestyle.xcodeproj"; sourceTree = "<group>"; };
 		9C4E0CB918CBDCE8009C5360 /* UILabelTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UILabelTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -85,6 +80,8 @@
 		9C4E0CE318CBDCE8009C5360 /* UILabelTestTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "UILabelTestTests-Info.plist"; sourceTree = "<group>"; };
 		9C4E0CE518CBDCE8009C5360 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		9C4E0CE718CBDCE8009C5360 /* UILabelTestTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UILabelTestTests.m; sourceTree = "<group>"; };
+		9FE17EC617D39559B0C4FE74 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		DD4B9D84C1E50A389E3501AE /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "../Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +93,7 @@
 				9C4E0CBF18CBDCE8009C5360 /* CoreGraphics.framework in Frameworks */,
 				9C4E0CC118CBDCE8009C5360 /* UIKit.framework in Frameworks */,
 				9C4E0CBD18CBDCE8009C5360 /* Foundation.framework in Frameworks */,
+				711E758C04F55A4104383029 /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -117,8 +115,7 @@
 			children = (
 				9C2CD65818CCFF0900D6C578 /* libpixate-freestyle.a */,
 				9C2CD65A18CCFF0900D6C578 /* pixate-freestyleTests.xctest */,
-				9C2CD65C18CCFF0900D6C578 /* libpixate-freestyle-mac.a */,
-				9C2CD65E18CCFF0900D6C578 /* pixate-freestyle-macTests.xctest */,
+				7C27F7BB1C16E1F10048520C /* MAFutureTest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -130,6 +127,7 @@
 				9C4E0CE118CBDCE8009C5360 /* UILabelTestTests */,
 				9C4E0CBB18CBDCE8009C5360 /* Frameworks */,
 				9C4E0CBA18CBDCE8009C5360 /* Products */,
+				9DE28C54E780775324D1BEA0 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -150,6 +148,7 @@
 				9C4E0CBE18CBDCE8009C5360 /* CoreGraphics.framework */,
 				9C4E0CC018CBDCE8009C5360 /* UIKit.framework */,
 				9C4E0CDB18CBDCE8009C5360 /* XCTest.framework */,
+				9FE17EC617D39559B0C4FE74 /* libPods.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -198,6 +197,15 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		9DE28C54E780775324D1BEA0 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				7AAA6D0088741DD8CCD1D8E7 /* Pods.debug.xcconfig */,
+				DD4B9D84C1E50A389E3501AE /* Pods.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -205,9 +213,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9C4E0CEB18CBDCE8009C5360 /* Build configuration list for PBXNativeTarget "UILabelTest" */;
 			buildPhases = (
+				9CA9DDE5D9F8118D5542BAC0 /* Check Pods Manifest.lock */,
 				9C4E0CB518CBDCE8009C5360 /* Sources */,
 				9C4E0CB618CBDCE8009C5360 /* Frameworks */,
 				9C4E0CB718CBDCE8009C5360 /* Resources */,
+				83AE52A13A0CC4562B44B9B2 /* Embed Pods Frameworks */,
+				C4598D04164BD000ADC59828 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -276,6 +287,13 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		7C27F7BB1C16E1F10048520C /* MAFutureTest */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = MAFutureTest;
+			remoteRef = 7C27F7BA1C16E1F10048520C /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		9C2CD65818CCFF0900D6C578 /* libpixate-freestyle.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -288,20 +306,6 @@
 			fileType = wrapper.cfbundle;
 			path = "pixate-freestyleTests.xctest";
 			remoteRef = 9C2CD65918CCFF0900D6C578 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		9C2CD65C18CCFF0900D6C578 /* libpixate-freestyle-mac.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libpixate-freestyle-mac.a";
-			remoteRef = 9C2CD65B18CCFF0900D6C578 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		9C2CD65E18CCFF0900D6C578 /* pixate-freestyle-macTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "pixate-freestyle-macTests.xctest";
-			remoteRef = 9C2CD65D18CCFF0900D6C578 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -327,6 +331,54 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		83AE52A13A0CC4562B44B9B2 /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/../Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		9CA9DDE5D9F8118D5542BAC0 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		C4598D04164BD000ADC59828 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/../Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		9C4E0CB518CBDCE8009C5360 /* Sources */ = {
@@ -457,6 +509,7 @@
 		};
 		9C4E0CEC18CBDCE8009C5360 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7AAA6D0088741DD8CCD1D8E7 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -475,6 +528,7 @@
 		};
 		9C4E0CED18CBDCE8009C5360 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = DD4B9D84C1E50A389E3501AE /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
