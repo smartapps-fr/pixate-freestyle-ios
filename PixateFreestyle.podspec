@@ -25,7 +25,7 @@ Pod::Spec.new do |s|
              LICENSE
   }
   s.author       = { "Pixate" => "info@pixate.com" }
-  s.platform     = :ios, '8.1'
+  s.platform     = :ios, '5.1'
   s.source       = {
         :git => "https://github.com/anton-matosov/pixate-freestyle-ios.git",
         :tag => s.version.to_s
