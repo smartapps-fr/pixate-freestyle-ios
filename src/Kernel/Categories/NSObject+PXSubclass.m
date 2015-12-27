@@ -146,6 +146,8 @@ static BOOL respondsToSelectorRAW(id self, SEL selector)
     return NO;
 }
 
+#if (TARGET_IPHONE_SIMULATOR && TARGET_CPU_X86_64)
+
 static BOOL classHierarchyRespondsToSelector(Class class, SEL selector)
 {
     if (class)
@@ -162,6 +164,8 @@ static BOOL classHierarchyRespondsToSelector(Class class, SEL selector)
 
     return NO;
 }
+
+#endif
 
 static BOOL respondsToSelectorIMP(id self, SEL _cmd, SEL selector)
 {
