@@ -1,4 +1,5 @@
 /*
+ * Copyright 2015-present StylingKit Development Team
  * Copyright 2012-present Pixate, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,6 +19,7 @@
 //  PXUINavigationBar.m
 //  Pixate
 //
+//  Modified by Anton Matosov
 //  Created by Paul Colton on 10/8/12.
 //  Copyright (c) 2012 Pixate, Inc. All rights reserved.
 //
@@ -67,7 +69,7 @@ static NSDictionary *BUTTONS_PSEUDOCLASS_MAP;
 
     PSEUDOCLASS_MAP = @{
         @"default" : @(UIBarMetricsDefault),
-        @"landscape-iphone" : @(UIBarMetricsLandscapePhone)
+        @"landscape-iphone" : @(UIBarMetricsCompact)
     };
     
     BUTTONS_PSEUDOCLASS_MAP = @{
@@ -96,7 +98,7 @@ static NSDictionary *BUTTONS_PSEUDOCLASS_MAP;
 {
     if (PXUtils.isIPhone)
     {
-        UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
+        UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
 
         switch (orientation) {
             case UIInterfaceOrientationLandscapeLeft:
@@ -177,9 +179,21 @@ static NSDictionary *BUTTONS_PSEUDOCLASS_MAP;
         /// title
 
         PXVirtualStyleableControl *title = [[PXVirtualStyleableControl alloc] initWithParent:self elementName:@"title"];
-        
+
         title.viewStylers = @[
-                              
+            [[PXGenericStyler alloc] initWithHandlers:@{
+                @"text-transform" : ^(PXDeclaration *declaration, PXStylerContext *context)
+                {
+
+                    NSString *newTitle = [declaration transformString:weakSelf.topItem.title];
+
+                    if (![newTitle isEqualToString:weakSelf.topItem.title])
+                    {
+                        weakSelf.topItem.title = newTitle;
+                    }
+                }
+            }],
+
             [[PXTextShadowStyler alloc] initWithCompletionBlock:^(PXVirtualStyleableControl *view, PXTextShadowStyler *styler, PXStylerContext *context) {
                PXShadow *shadow = context.textShadow;
                NSMutableDictionary *currentTextAttributes = [NSMutableDictionary dictionaryWithDictionary:weakSelf.titleTextAttributes];
@@ -190,7 +204,7 @@ static NSDictionary *BUTTONS_PSEUDOCLASS_MAP;
                 nsShadow.shadowOffset = CGSizeMake(shadow.horizontalOffset, shadow.verticalOffset);
                 nsShadow.shadowBlurRadius = shadow.blurDistance;
                 
-                [currentTextAttributes setObject:nsShadow forKey:NSShadowAttributeName];
+                currentTextAttributes[NSShadowAttributeName] = nsShadow;
                
                [weakSelf px_setTitleTextAttributes:currentTextAttributes];
             }],
@@ -198,8 +212,7 @@ static NSDictionary *BUTTONS_PSEUDOCLASS_MAP;
             [[PXFontStyler alloc] initWithCompletionBlock:^(PXVirtualStyleableControl *view, PXFontStyler *styler, PXStylerContext *context) {
                NSMutableDictionary *currentTextAttributes = [NSMutableDictionary dictionaryWithDictionary:weakSelf.titleTextAttributes];
                
-               [currentTextAttributes setObject:context.font
-                                         forKey:NSFontAttributeName];
+               currentTextAttributes[NSFontAttributeName] = context.font;
                
                [weakSelf px_setTitleTextAttributes:currentTextAttributes];
                 
@@ -217,8 +230,7 @@ static NSDictionary *BUTTONS_PSEUDOCLASS_MAP;
                
                 if(color)
                 {
-                   [currentTextAttributes setObject:color
-                                             forKey:NSForegroundColorAttributeName];
+                   currentTextAttributes[NSForegroundColorAttributeName] = color;
                    
                    [weakSelf px_setTitleTextAttributes:currentTextAttributes];
                 }
@@ -236,7 +248,7 @@ static NSDictionary *BUTTONS_PSEUDOCLASS_MAP;
          {
              [UIBarButtonItem UpdateStyleWithRuleSetHandler:ruleSet
                                                     context:context
-                                                     target:[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil]];
+                                                     target:[UIBarButtonItem appearanceWhenContainedIn:[self class], nil]];
          }];
         
         barButtons.supportedPseudoClasses = BUTTONS_PSEUDOCLASS_MAP.allKeys;
@@ -249,12 +261,12 @@ static NSDictionary *BUTTONS_PSEUDOCLASS_MAP;
             PXShapeStyler.sharedInstance,
             PXBoxShadowStyler.sharedInstance,
 
-            [[PXFontStyler alloc] initWithCompletionBlock:[UIBarButtonItem FontStylerCompletionBlock:[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil]]],
+            [[PXFontStyler alloc] initWithCompletionBlock:[UIBarButtonItem FontStylerCompletionBlock:[UIBarButtonItem appearanceWhenContainedIn:[self class], nil]]],
             
-            [[PXPaintStyler alloc] initWithCompletionBlock:[UIBarButtonItem PXPaintStylerCompletionBlock:[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil]]],
+            [[PXPaintStyler alloc] initWithCompletionBlock:[UIBarButtonItem PXPaintStylerCompletionBlock:[UIBarButtonItem appearanceWhenContainedIn:[self class], nil]]],
 
             [[PXGenericStyler alloc] initWithHandlers: @{
-                @"-ios-tint-color" : [UIBarButtonItem TintColorDeclarationHandlerBlock:[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil]]
+                @"-ios-tint-color" : [UIBarButtonItem TintColorDeclarationHandlerBlock:[UIBarButtonItem appearanceWhenContainedIn:[self class], nil]]
                 }],
             ];
         
@@ -271,7 +283,7 @@ static NSDictionary *BUTTONS_PSEUDOCLASS_MAP;
              {
                  UIImage *image = context.backgroundImage;
                  
-                 [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil]
+                 [[UIBarButtonItem appearanceWhenContainedIn:[self class], nil]
                       setBackButtonBackgroundImage:image
                       forState:[context stateFromStateNameMap:BUTTONS_PSEUDOCLASS_MAP]
                       barMetrics:UIBarMetricsDefault];
@@ -334,7 +346,7 @@ static NSDictionary *BUTTONS_PSEUDOCLASS_MAP;
             
             [[PXBarMetricsAdjustmentStyler alloc] initWithCompletionBlock:^(PXUINavigationBar *view, PXBarMetricsAdjustmentStyler *styler, PXStylerContext *context) {
                 PXDimension *offset = context.barMetricsVerticalOffset;
-                CGFloat value = (offset) ? [offset points].number : 0.0f;
+                CGFloat value = (offset) ? offset.points.number : 0.0f;
                 
                 [view px_setTitleVerticalPositionAdjustment:value forBarMetrics:[context stateFromStateNameMap:PSEUDOCLASS_MAP]];
             }],
@@ -357,8 +369,7 @@ static NSDictionary *BUTTONS_PSEUDOCLASS_MAP;
                     
                     if(color)
                     {
-                        [currentTextAttributes setObject:color
-                                                  forKey:NSForegroundColorAttributeName];
+                        currentTextAttributes[NSForegroundColorAttributeName] = color;
                         
                         [view px_setTitleTextAttributes:currentTextAttributes];
                     }
@@ -383,7 +394,7 @@ static NSDictionary *BUTTONS_PSEUDOCLASS_MAP;
                 nsShadow.shadowOffset = CGSizeMake(shadow.horizontalOffset, shadow.verticalOffset);
                 nsShadow.shadowBlurRadius = shadow.blurDistance;
                 
-                [currentTextAttributes setObject:nsShadow forKey:NSShadowAttributeName];
+                currentTextAttributes[NSShadowAttributeName] = nsShadow;
                 
                 [view px_setTitleTextAttributes:currentTextAttributes];
             }],
@@ -392,8 +403,7 @@ static NSDictionary *BUTTONS_PSEUDOCLASS_MAP;
             [[PXFontStyler alloc] initWithCompletionBlock:^(PXUINavigationBar *view, PXFontStyler *styler, PXStylerContext *context) {
                 NSMutableDictionary *currentTextAttributes = [NSMutableDictionary dictionaryWithDictionary:view.titleTextAttributes];
                 
-                [currentTextAttributes setObject:context.font
-                                          forKey:NSFontAttributeName];
+                currentTextAttributes[NSFontAttributeName] = context.font;
                 
                 [view px_setTitleTextAttributes:currentTextAttributes];
                 
@@ -515,7 +525,7 @@ PX_LAYOUT_SUBVIEWS_OVERRIDE
 // This will allow for the dynamically added content to style, like the UINavigationItems
 -(void)addSubview:(UIView *)view
 {
-    callSuper1(SUPER_PREFIX, _cmd, view);
+    callSuper1(SUPER_PREFIX, @selector(addSubview:), view);
     
     // invalidate the navbar when new views get added (primarily to catch new top level views sliding in)
     [PXStyleUtils invalidateStyleableAndDescendants:self];

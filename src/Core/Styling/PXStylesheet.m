@@ -18,6 +18,7 @@
 //  PXStylesheet.m
 //  Pixate
 //
+//  Modified by Anton Matosov on 12/19/15.
 //  Created by Kevin Lindsey on 7/10/12.
 //  Copyright (c) 2012 Pixate, Inc. All rights reserved.
 //
@@ -49,19 +50,7 @@ static PXStylesheet *currentViewStylesheet = nil;
     NSMutableDictionary *keyframesByName_;
 }
 
-#ifdef PX_LOGGING
-static int ddLogLevel = LOG_LEVEL_WARN;
-
-+ (int)ddLogLevel
-{
-    return ddLogLevel;
-}
-
-+ (void)ddSetLogLevel:(int)logLevel
-{
-    ddLogLevel = logLevel;
-}
-#endif
+STK_DEFINE_CLASS_LOG_LEVEL
 
 #pragma mark - Static initializers
 
@@ -74,17 +63,16 @@ static int ddLogLevel = LOG_LEVEL_WARN;
     }
 }
 
-+ (id)styleSheetFromSource:(NSString *)source withOrigin:(PXStylesheetOrigin)origin
++ (instancetype)styleSheetFromSource:(NSString *)source withOrigin:(PXStylesheetOrigin)origin
 {
     return [self styleSheetFromSource:source withOrigin:origin filename:nil];
 }
 
-+ (id)styleSheetFromSource:(NSString *)source withOrigin:(PXStylesheetOrigin)origin filename:(NSString *)name
++ (instancetype)styleSheetFromSource:(NSString *)source withOrigin:(PXStylesheetOrigin)origin filename:(NSString *)name
 {
     PXStylesheet *result = nil;
 
-    // TODO: maybe the following can be more intelligent and only remove cache entries that reference the stylesheet
-    // being replaced
+    // TODO: maybe the following can be more intelligent and only remove cache entries that reference the stylesheet being replaced
 
     // clear style cache
     [PixateFreestyle clearStyleCache];
@@ -105,7 +93,7 @@ static int ddLogLevel = LOG_LEVEL_WARN;
     return result;
 }
 
-+ (id)styleSheetFromFilePath:(NSString *)aFilePath withOrigin:(PXStylesheetOrigin)origin
++ (instancetype)styleSheetFromFilePath:(NSString *)aFilePath withOrigin:(PXStylesheetOrigin)origin
 {
     NSString* source = [NSString stringWithContentsOfFile:aFilePath encoding:NSUTF8StringEncoding error:NULL];
 
@@ -121,12 +109,12 @@ static int ddLogLevel = LOG_LEVEL_WARN;
 
 #pragma mark - Initializers
 
-- (id)init
+- (instancetype)init
 {
     return [self initWithOrigin:PXStylesheetOriginApplication];
 }
 
-- (id)initWithOrigin:(PXStylesheetOrigin)anOrigin
+- (instancetype)initWithOrigin:(PXStylesheetOrigin)anOrigin
 {
     if (self = [super init])
     {
@@ -188,7 +176,7 @@ static int ddLogLevel = LOG_LEVEL_WARN;
 
 - (NSArray *)mediaGroups
 {
-    return (mediaGroups_) ? [NSArray arrayWithArray:mediaGroups_] : nil;
+    return mediaGroups_;
 }
 
 + (PXStylesheet *)currentApplicationStylesheet
@@ -227,7 +215,7 @@ static int ddLogLevel = LOG_LEVEL_WARN;
 
                 // update all views
                 [PixateFreestyle updateStylesForAllViews];
-                
+
             }];
         }
         else
@@ -274,8 +262,7 @@ static int ddLogLevel = LOG_LEVEL_WARN;
     if (element)
     {
         NSArray *candidateRuleSets = [self ruleSetsForStyleable:element];
-//        NSArray *candidateRuleSets = [self ruleSets];
-//        NSLog(@"%@ = %d", [PXStyleUtils descriptionForStyleable:element], candidateRuleSets.count);
+        DDLogDebug(@"%@ = %lu", [PXStyleUtils descriptionForStyleable:element], (unsigned long)candidateRuleSets.count);
 
         for (PXRuleSet *ruleSet in candidateRuleSets)
         {
@@ -288,7 +275,7 @@ static int ddLogLevel = LOG_LEVEL_WARN;
         }
     }
 
-    return [NSArray arrayWithArray:result];
+    return result;
 }
 
 - (void)setURI:(NSString *)uri forNamespacePrefix:(NSString *)prefix
@@ -305,7 +292,7 @@ static int ddLogLevel = LOG_LEVEL_WARN;
             namespacePrefixMap_ = [[NSMutableDictionary alloc] init];
         }
 
-        [namespacePrefixMap_ setObject:uri forKey:prefix];
+        namespacePrefixMap_[prefix] = uri;
     }
 }
 
@@ -320,7 +307,7 @@ static int ddLogLevel = LOG_LEVEL_WARN;
             prefix = @"";
         }
 
-        result = [namespacePrefixMap_ objectForKey:prefix];
+        result = namespacePrefixMap_[prefix];
     }
 
     return result;
@@ -335,13 +322,13 @@ static int ddLogLevel = LOG_LEVEL_WARN;
             keyframesByName_ = [[NSMutableDictionary alloc] init];
         }
 
-        [keyframesByName_ setObject:keyframe forKey:keyframe.name];
+        keyframesByName_[keyframe.name] = keyframe;
     }
 }
 
 - (PXKeyframe *)keyframeForName:(NSString *)name
 {
-    return [keyframesByName_ objectForKey:name];
+    return keyframesByName_[name];
 }
 
 #pragma mark - Static public methods

@@ -18,6 +18,7 @@
 //  NSDictionary+PXObject.m
 //  Pixate
 //
+//  Modified by Anton Matosov on 12/30/15.
 //  Created by Kevin Lindsey on 3/26/13.
 //  Copyright (c) 2013 Pixate, Inc. All rights reserved.
 //
@@ -31,20 +32,20 @@ void PXForceLoadNSDictionaryPXObject() {}
 
 - (id)nilableObjectForKey:(id)key
 {
-    id object = [self objectForKey:key];
+    id object = self[key];
 
     return (object == [NSNull null]) ? nil : object;
 }
 
 - (CGRect)rectForKey:(id)key
 {
-    id object = [self objectForKey:key];
+    id object = self[key];
 
     if ([object isKindOfClass:[PXValue class]])
     {
         PXValue *value = object;
 
-        return [value CGRectValue];
+        return value.CGRectValue;
     }
     else
     {
@@ -54,13 +55,13 @@ void PXForceLoadNSDictionaryPXObject() {}
 
 - (CGFloat)floatForKey:(id)key
 {
-    id object = [self objectForKey:key];
+    id object = self[key];
 
     if ([object isKindOfClass:[PXValue class]])
     {
         PXValue *value = object;
 
-        return [value CGFloatValue];
+        return value.CGFloatValue;
     }
     else
     {
@@ -70,13 +71,13 @@ void PXForceLoadNSDictionaryPXObject() {}
 
 - (CGColorRef)colorRefForKey:(id)key
 {
-    id object = [self objectForKey:key];
+    id object = self[key];
 
     if ([object isKindOfClass:[PXValue class]])
     {
         PXValue *value = object;
 
-        return [value CGColorRefValue];
+        return value.CGColorRefValue;
     }
     else
     {
@@ -87,13 +88,13 @@ void PXForceLoadNSDictionaryPXObject() {}
 
 - (CGSize)sizeForKey:(id)key
 {
-    id object = [self objectForKey:key];
+    id object = self[key];
 
     if ([object isKindOfClass:[PXValue class]])
     {
         PXValue *value = object;
 
-        return [value CGSizeValue];
+        return value.CGSizeValue;
     }
     else
     {
@@ -103,13 +104,13 @@ void PXForceLoadNSDictionaryPXObject() {}
 
 - (BOOL)booleanForKey:(id)key
 {
-    id object = [self objectForKey:key];
+    id object = self[key];
 
     if ([object isKindOfClass:[PXValue class]])
     {
         PXValue *value = object;
 
-        return [value BooleanValue];
+        return value.BooleanValue;
     }
     else
     {
@@ -119,13 +120,13 @@ void PXForceLoadNSDictionaryPXObject() {}
 
 - (CGAffineTransform)transformForKey:(id)key
 {
-    id object = [self objectForKey:key];
+    id object = self[key];
 
     if ([object isKindOfClass:[PXValue class]])
     {
         PXValue *value = object;
 
-        return [value CGAffineTransformValue];
+        return value.CGAffineTransformValue;
     }
     else
     {
@@ -135,13 +136,13 @@ void PXForceLoadNSDictionaryPXObject() {}
 
 - (UIEdgeInsets)insetsForKey:(id)key
 {
-    id object = [self objectForKey:key];
+    id object = self[key];
 
     if ([object isKindOfClass:[PXValue class]])
     {
         PXValue *value = object;
 
-        return [value UIEdgeInsetsValue];
+        return value.UIEdgeInsetsValue;
     }
     else
     {
@@ -151,13 +152,13 @@ void PXForceLoadNSDictionaryPXObject() {}
 
 - (NSLineBreakMode)lineBreakModeForKey:(id)key
 {
-    id object = [self objectForKey:key];
+    id object = self[key];
 
     if ([object isKindOfClass:[PXValue class]])
     {
         PXValue *value = object;
 
-        return [value NSLineBreakModeValue];
+        return value.NSLineBreakModeValue;
     }
     else
     {
@@ -167,13 +168,13 @@ void PXForceLoadNSDictionaryPXObject() {}
 
 - (NSTextAlignment)textAlignmentForKey:(id)key
 {
-    id object = [self objectForKey:key];
+    id object = self[key];
     
     if ([object isKindOfClass:[PXValue class]])
     {
         PXValue *value = object;
         
-        return [value NSTextAlignmentValue];
+        return value.NSTextAlignmentValue;
     }
     else
     {

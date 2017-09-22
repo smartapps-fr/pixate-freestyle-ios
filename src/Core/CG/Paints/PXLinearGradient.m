@@ -18,6 +18,7 @@
 //  PXLinearGradient.m
 //  Pixate
 //
+//  Modified by Anton Matosov
 //  Created by Kevin Lindsey on 6/8/12.
 //  Copyright (c) 2012 Pixate, Inc. All rights reserved.
 //
@@ -27,16 +28,18 @@
 #import "PXMath.h"
 #import "UIColor+PXColors.h"
 
-typedef enum {
+typedef NS_ENUM(unsigned int, PXAngleType) {
     PXAngleTypeAngle,
     PXAngleTypePoints,
     PXAngleTypeDirection
-} PXAngleType;
+};
 
 @implementation PXLinearGradient
 {
     PXAngleType angleType_;
 }
+
+STK_DEFINE_CLASS_LOG_LEVEL;
 
 #pragma mark - Static Methods
 
@@ -52,7 +55,7 @@ typedef enum {
 
 #pragma mark - Initializers
 
-- (id)init
+- (instancetype)init
 {
     if (self = [super init])
     {
@@ -277,7 +280,7 @@ typedef enum {
             else
             {
                 // error
-                NSLog(@"Angle not within the half-closed interval [0,360): %f", angle);
+                DDLogError(@"Angle not within the half-closed interval [0,360): %f", angle);
             }
 
             // find center
@@ -343,7 +346,7 @@ typedef enum {
 
     // copy PXGradient properties, but not colors
     result.transform = self.transform;
-    result.offsets = [NSMutableArray arrayWithArray:self.offsets];
+    result.offsets = self.offsets.mutableCopy;
 
     return result;
 }

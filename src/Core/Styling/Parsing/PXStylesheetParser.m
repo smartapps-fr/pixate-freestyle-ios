@@ -18,6 +18,7 @@
 //  PXStylesheetParser.m
 //  Pixate
 //
+//  Modified by Anton Matosov on 12/30/15.
 //  Created by Kevin Lindsey on 9/1/12.
 //  Copyright (c) 2012 Pixate, Inc. All rights reserved.
 //
@@ -54,19 +55,7 @@
     NSMutableArray *activeImports_;
 }
 
-#ifdef PX_LOGGING
-static int ddLogLevel = LOG_LEVEL_WARN;
-
-+ (int)ddLogLevel
-{
-    return ddLogLevel;
-}
-
-+ (void)ddSetLogLevel:(int)logLevel
-{
-    ddLogLevel = logLevel;
-}
-#endif
+STK_DEFINE_CLASS_LOG_LEVEL
 
 #pragma mark - Statics
 
@@ -228,7 +217,7 @@ static NSIndexSet *ARCHAIC_PSEUDO_ELEMENTS_SET;
 
 #pragma mark - Initializers
 
-- (id)init
+- (instancetype)init
 {
     if (self = [super init])
     {
@@ -427,8 +416,8 @@ static NSIndexSet *ARCHAIC_PSEUDO_ELEMENTS_SET;
         [self advance];
 
         // calculate resource name and file extension
-        NSString *pathMinusExtension = [path stringByDeletingPathExtension];
-        NSString *extension = [[path pathExtension] lowercaseString];
+        NSString *pathMinusExtension = path.stringByDeletingPathExtension;
+        NSString *extension = path.pathExtension.lowercaseString;
         NSString *bundlePath = [[NSBundle mainBundle] pathForResource:pathMinusExtension ofType:extension];
 
         if (![activeImports_ containsObject:bundlePath])
@@ -595,7 +584,7 @@ static NSIndexSet *ARCHAIC_PSEUDO_ELEMENTS_SET;
         // create blocks, one for each offset, using the same declarations for each
         for (NSNumber *number in offsets)
         {
-            CGFloat offset = [number floatValue];
+            CGFloat offset = number.floatValue;
 
             // create keyframe block
             PXKeyframeBlock *block = [[PXKeyframeBlock alloc] initWithOffset:offset];
@@ -749,7 +738,7 @@ static NSIndexSet *ARCHAIC_PSEUDO_ELEMENTS_SET;
         // create expression group or use single entry
         if (expressions.count == 1)
         {
-            currentStyleSheet_.activeMediaQuery = [expressions objectAtIndex:0];
+            currentStyleSheet_.activeMediaQuery = expressions[0];
         }
         else
         {
@@ -935,17 +924,17 @@ static NSIndexSet *ARCHAIC_PSEUDO_ELEMENTS_SET;
             NSNumber *denom = currentLexeme.value;
             [self advance];
 
-            if ([numerator floatValue] == 0.0)
+            if (numerator.floatValue == 0.0)
             {
                 // do nothing, leave result as 0.0
             }
-            else if ([denom floatValue] == 0.0)
+            else if (denom.floatValue == 0.0)
             {
-                value = [NSNumber numberWithDouble:NAN];
+                value = @(NAN);
             }
             else
             {
-                value = [NSNumber numberWithFloat:([numerator floatValue] / [denom floatValue])];
+                value = @(numerator.floatValue / denom.floatValue);
             }
         }
     }
@@ -1005,7 +994,7 @@ static NSIndexSet *ARCHAIC_PSEUDO_ELEMENTS_SET;
 
     while (currentLexeme && ![self isInTypeSet:DECLARATION_DELIMITER_SET])
     {
-        if (currentLexeme.type == PXSS_COLON && ((PXStylesheetLexeme *)[lexemes lastObject]).type == PXSS_IDENTIFIER)
+        if (currentLexeme.type == PXSS_COLON && ((PXStylesheetLexeme *)lexemes.lastObject).type == PXSS_IDENTIFIER)
         {
             // assume we've moved into a new declaration, so push last lexeme back into the lexeme stream
             PXStylesheetLexeme *propertyName = [lexemes pop];
@@ -1031,8 +1020,8 @@ static NSIndexSet *ARCHAIC_PSEUDO_ELEMENTS_SET;
 
     if (lexemes.count > 0)
     {
-        PXStylesheetLexeme *firstLexeme = [lexemes objectAtIndex:0];
-        PXStylesheetLexeme *lastLexeme = [lexemes lastObject];
+        PXStylesheetLexeme *firstLexeme = lexemes[0];
+        PXStylesheetLexeme *lastLexeme = lexemes.lastObject;
         NSUInteger start = firstLexeme.range.location;
         NSUInteger end = lastLexeme.range.location + lastLexeme.range.length;
         NSUInteger length = end - start;
@@ -1046,7 +1035,7 @@ static NSIndexSet *ARCHAIC_PSEUDO_ELEMENTS_SET;
     }
 
     // check for !important
-    PXStylesheetLexeme *lastLexeme = [lexemes lastObject];
+    PXStylesheetLexeme *lastLexeme = lexemes.lastObject;
 
     if (lastLexeme.type == PXSS_IMPORTANT)
     {
@@ -1306,7 +1295,7 @@ static NSIndexSet *ARCHAIC_PSEUDO_ELEMENTS_SET;
         else
         {
             // a number precedes 'n'
-            modulus = [[numberString substringWithRange:NSMakeRange(0, numberString.length - 1)] intValue];
+            modulus = [numberString substringWithRange:NSMakeRange(0, numberString.length - 1)].intValue;
         }
 
         [self advance];
@@ -1318,7 +1307,7 @@ static NSIndexSet *ARCHAIC_PSEUDO_ELEMENTS_SET;
             // grab remainder
             [self assertType:PXSS_NUMBER];
             NSNumber *remainderNumber = currentLexeme.value;
-            remainder = [remainderNumber intValue];
+            remainder = remainderNumber.intValue;
             [self advance];
         }
         else if ([self isType:PXSS_NUMBER])
@@ -1328,7 +1317,7 @@ static NSIndexSet *ARCHAIC_PSEUDO_ELEMENTS_SET;
             if ([numberString hasPrefix:@"-"] || [numberString hasPrefix:@"+"])
             {
                 NSNumber *remainderNumber = currentLexeme.value;
-                remainder = [remainderNumber intValue];
+                remainder = remainderNumber.intValue;
                 [self advance];
             }
             else
@@ -1361,7 +1350,7 @@ static NSIndexSet *ARCHAIC_PSEUDO_ELEMENTS_SET;
     {
         modulus = 1;
         NSNumber *remainderNumber = currentLexeme.value;
-        remainder = [remainderNumber intValue];
+        remainder = remainderNumber.intValue;
 
         [self advance];
     }
@@ -1672,7 +1661,7 @@ static NSIndexSet *ARCHAIC_PSEUDO_ELEMENTS_SET;
 
 - (PXStylesheetLexeme *)advance
 {
-    return currentLexeme = [lexer_ nextLexeme];
+    return currentLexeme = lexer_.nextLexeme;
 }
 
 - (NSString *)lexemeNameFromType:(int)type
@@ -1722,7 +1711,7 @@ static NSIndexSet *ARCHAIC_PSEUDO_ELEMENTS_SET;
 
 - (NSString *)currentFilename
 {
-    return (activeImports_.count > 0) ? [[activeImports_ lastObject] lastPathComponent] : nil;
+    return (activeImports_.count > 0) ? [activeImports_.lastObject lastPathComponent] : nil;
 }
 
 - (void)addError:(NSString *)error

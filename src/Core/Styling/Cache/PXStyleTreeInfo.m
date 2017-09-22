@@ -18,6 +18,7 @@
 //  PXStyleCache.m
 //  Pixate
 //
+//  Modified by Anton Matosov on 12/30/15.
 //  Created by Kevin Lindsey on 10/2/13.
 //  Copyright (c) 2013 Pixate, Inc. All rights reserved.
 //
@@ -37,12 +38,12 @@
 
 #pragma mark - Initializers
 
-- (id)initWithStyleable:(id<PXStyleable>)styleable
+- (instancetype)initWithStyleable:(id<PXStyleable>)styleable
 {
     if (self = [super init])
     {
         styleKey_ = styleable.styleKey;
-        NSNumber* checkPseudoClassFunction = [NSNumber numberWithBool:NO];
+        NSNumber* checkPseudoClassFunction = @NO;
         styleableStyleInfo_ = [PXStyleInfo styleInfoForStyleable:styleable checkPseudoClassFunction:&checkPseudoClassFunction];
         _cached = !checkPseudoClassFunction.boolValue;
         styleableStyleInfo_.forceInvalidation = YES;
@@ -70,22 +71,25 @@
         [styleableStyleInfo_ applyToStyleable:styleable];
     }
 
-    for (NSIndexPath *indexPath in childStyleInfo_.keyEnumerator)
+    [childStyleInfo_ enumerateKeysAndObjectsUsingBlock:^(NSIndexPath *indexPath, PXStyleInfo *styleInfo, BOOL *stop)
     {
-        id<PXStyleable> child = [self findDescendantOfStyleable:styleable fromIndexPath:indexPath];
+        id<PXStyleable> child = [self findDescendantOfStyleable:styleable
+                                                  fromIndexPath:indexPath];
 
         if (child != nil)
         {
-            PXStyleInfo *styleInfo = [childStyleInfo_ objectForKey:indexPath];
             if (styleInfo.changeable)
+            {
                 styleInfo = [PXStyleInfo styleInfoForStyleable:child];
+            }
 
             [styleInfo applyToStyleable:child];
         }
-    }
+    }];
 }
 
-- (id<PXStyleable>)findDescendantOfStyleable:(id<PXStyleable>)styleable fromIndexPath:(NSIndexPath *)indexPath
+- (id<PXStyleable>)findDescendantOfStyleable:(id<PXStyleable>)styleable
+                               fromIndexPath:(NSIndexPath *)indexPath
 {
     NSUInteger indexes[indexPath.length];
     [indexPath getIndexes:indexes];
@@ -137,7 +141,7 @@
         styleInfo.forceInvalidation = YES;
 
         // save info for this index path
-        [childStyleInfo_ setObject:styleInfo forKey:indexPath];
+        childStyleInfo_[indexPath] = styleInfo;
     }
 
     // now process this child's children

@@ -18,6 +18,7 @@
 //  PXPseudoClassPredicate.m
 //  Pixate
 //
+//  Modified by Anton Matosov on 12/30/15.
 //  Created by Kevin Lindsey on 11/26/12.
 //  Copyright (c) 2012 Pixate, Inc. All rights reserved.
 //
@@ -27,23 +28,11 @@
 
 @implementation PXPseudoClassPredicate
 
-#ifdef PX_LOGGING
-static int ddLogLevel = LOG_LEVEL_WARN;
-
-+ (int)ddLogLevel
-{
-    return ddLogLevel;
-}
-
-+ (void)ddSetLogLevel:(int)logLevel
-{
-    ddLogLevel = logLevel;
-}
-#endif
+STK_DEFINE_CLASS_LOG_LEVEL
 
 #pragma mark - Initializers
 
-- (id)initWithPredicateType:(PXPseudoClassPredicateType)type
+- (instancetype)initWithPredicateType:(PXPseudoClassPredicateType)type
 {
     if (self = [super init])
     {

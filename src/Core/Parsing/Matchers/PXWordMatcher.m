@@ -18,6 +18,7 @@
 //  PXWordMatcher.m
 //  Pixate
 //
+//  Modified by Anton Matosov on 12/30/15.
 //  Created by Kevin Lindsey on 6/25/12.
 //  Copyright (c) 2012 Pixate, Inc. All rights reserved.
 //
@@ -31,12 +32,12 @@
 }
 
 #pragma mark - Initializers
-- (id)initWithDictionary:(NSDictionary *)dictionary
+- (instancetype)initWithDictionary:(NSDictionary *)dictionary
 {
     return [self initWithDictionary:dictionary usingSymbols:NO];
 }
 
-- (id)initWithDictionary:(NSDictionary *)dictionary usingSymbols:(BOOL)usingSymbols
+- (instancetype)initWithDictionary:(NSDictionary *)dictionary usingSymbols:(BOOL)usingSymbols
 {
     if (self = [super init])
     {
@@ -44,13 +45,13 @@
 
         if (dictionary)
         {
-            NSArray *keys = [dictionary allKeys];
+            NSArray *keys = dictionary.allKeys;
             NSString *joinedKeys = [NSString stringWithFormat:@"\\Q%@\\E", [keys componentsJoinedByString:@"\\E|\\Q"]];
             NSString *closingRegex = (usingSymbols) ? @")" : @")\\b";
 
             patternString = [[@"^(?:" stringByAppendingString:joinedKeys] stringByAppendingString:closingRegex];
 
-            if (self = [self initWithType:0 withPatternString:patternString])
+            if (self = [super initWithType:0 withPatternString:patternString])
             {
                 self->wordMap = [NSDictionary dictionaryWithDictionary:dictionary];
             }
@@ -70,11 +71,11 @@
     if (wordMap && match)
     {
         NSString *text = [aString substringWithRange:match.range];
-        NSNumber *type = [wordMap objectForKey:text];
+        NSNumber *type = wordMap[text];
 
         if (type)
         {
-            result = [PXStylesheetLexeme lexemeWithType:[type intValue] withRange:match.range withValue:text];
+            result = [PXStylesheetLexeme lexemeWithType:type.intValue withRange:match.range withValue:text];
         }
     }
 

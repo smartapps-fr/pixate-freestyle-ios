@@ -18,6 +18,7 @@
 //  PXGradient.m
 //  Pixate
 //
+//  Modified by Anton Matosov on 12/30/15.
 //  Created by Kevin Lindsey on 6/8/12.
 //  Copyright (c) 2012 Pixate, Inc. All rights reserved.
 //
@@ -32,7 +33,7 @@
 
 #pragma mark - Initializers
 
-- (id)init
+- (instancetype)init
 {
     self = [super init];
 
@@ -61,9 +62,9 @@
     {
         int index = -1;
 
-        for (int i = 0; i < [_offsets count]; i++)
+        for (int i = 0; i < _offsets.count; i++)
         {
-            if ([[_offsets objectAtIndex:i] floatValue] == offset)
+            if ([_offsets[i] floatValue] == offset)
             {
                 index = i;
                 break;
@@ -73,12 +74,12 @@
         if (index == -1)
         {
             [_colors addObject:color];
-            [_offsets addObject:[NSNumber numberWithFloat:offset]];
+            [_offsets addObject:@(offset)];
         }
         else
         {
-            [_colors replaceObjectAtIndex:index withObject:color];
-            [_offsets replaceObjectAtIndex:index withObject:[NSNumber numberWithFloat:offset]];
+            _colors[index] = color;
+            _offsets[index] = @(offset);
         }
     }
 }
@@ -113,36 +114,34 @@
 
             for (int i = 0; i < _colors.count; i++)
             {
-                [_offsets addObject:[NSNumber numberWithFloat:(CGFloat) i / (_colors.count - 1)]];
+                [_offsets addObject:@((CGFloat) i / (_colors.count - 1))];
             }
         }
 
         // convert locations
-        NSUInteger locationCount = [_offsets count];
+        NSUInteger locationCount = _offsets.count;
         CGFloat locations[locationCount];
 
         for (int i = 0; i < locationCount; i++)
         {
-            locations[i] = [[_offsets objectAtIndex:i] floatValue];
+            locations[i] = [_offsets[i] floatValue];
         }
 
         // convert colors
         NSMutableArray *cgColorArray = [NSMutableArray array];
 
-        for (int i = 0; i < [_colors count]; i++)
+        for (int i = 0; i < _colors.count; i++)
         {
-            CGColorRef cref = ((UIColor *) [_colors objectAtIndex:i]).CGColor;
+            CGColorRef cref = ((UIColor *) _colors[i]).CGColor;
 
             [cgColorArray addObject:(__bridge id)cref];
         }
-
-        NSArray *colorArray = [NSArray arrayWithArray:cgColorArray];
 
         // create color space
         CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
 
         // create gradient
-        _gradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef) colorArray, locations);
+        _gradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef) cgColorArray, locations);
 
         // release color space
         CGColorSpaceRelease(colorSpace);

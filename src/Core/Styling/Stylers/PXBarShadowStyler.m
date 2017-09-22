@@ -18,12 +18,13 @@
 //  PXBarShadowStyler
 //  Pixate
 //
+//  Modified by Anton Matosov on 12/30/15.
 //  Created by Paul Colton on 10/16/12.
 //  Copyright (c) 2012 Pixate, Inc. All rights reserved.
 //
 
 #import "PXBarShadowStyler.h"
-#import "PXShapeView.h"
+#import "STKShapeView.h"
 #import "PXRectangle.h"
 #import "PXStroke.h"
 #import "PXSolidPaint.h"
@@ -66,7 +67,7 @@
         CGSize size = context.shadowBounds.size;
 
         // create image
-        if ([[context.shadowUrl.pathExtension lowercaseString] isEqualToString:@"svg"])
+        if ([(context.shadowUrl.pathExtension).lowercaseString isEqualToString:@"svg"])
         {
             CGRect bounds = context.shadowBounds;
 
@@ -77,10 +78,10 @@
                 size = bounds.size;
             }
 
-            PXShapeView *shapeView = [[PXShapeView alloc] initWithFrame:bounds];
+            STKShapeView *shapeView = [[STKShapeView alloc] initWithFrame:bounds];
 
             [shapeView loadSceneFromURL:context.shadowUrl];
-            context.shadowImage = [shapeView renderToImage];
+            context.shadowImage = shapeView.renderToImage;
         }
         else
         {

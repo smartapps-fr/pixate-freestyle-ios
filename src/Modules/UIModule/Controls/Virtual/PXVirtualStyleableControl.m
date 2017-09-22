@@ -18,6 +18,7 @@
 //  PXVirtualControlBase.m
 //  Pixate
 //
+//  Modified by Anton Matosov on 12/30/15.
 //  Created by Kevin Lindsey on 10/16/12.
 //  Copyright (c) 2012 Pixate, Inc. All rights reserved.
 //
@@ -29,7 +30,7 @@
 {
     PXViewStyleUpdaterBlock _block;
     NSString *_styleClass;
-    NSArray *_styleClasses;
+    NSSet *_styleClasses;
 }
 
 // synthesize properties coming from PXStyleable protocol
@@ -45,17 +46,17 @@
 
 #pragma mark - Initializers
 
-- (id)init
+- (instancetype)init
 {
     return [self initWithParent:nil elementName:@"" viewStyleUpdaterBlock:nil];
 }
 
-- (id)initWithParent:(id<PXStyleable>)parent elementName:(NSString *)elementName
+- (instancetype)initWithParent:(id<PXStyleable>)parent elementName:(NSString *)elementName
 {
     return [self initWithParent:parent elementName:elementName viewStyleUpdaterBlock:nil];
 }
 
-- (id)initWithParent:(id<PXStyleable>)parent elementName:(NSString *)elementName viewStyleUpdaterBlock:(PXViewStyleUpdaterBlock)block
+- (instancetype)initWithParent:(id<PXStyleable>)parent elementName:(NSString *)elementName viewStyleUpdaterBlock:(PXViewStyleUpdaterBlock)block
 {
     if (self = [super init])
     {
@@ -103,7 +104,7 @@
 
 - (NSString *)styleKey
 {
-    return [PXStyleUtils selectorFromStyleable:self];
+    return [PXStyleUtils styleKeyFromStyleable:self];
 }
 
 - (NSDictionary *)viewStylersByProperty
@@ -116,21 +117,18 @@
 #pragma mark - Properties
 
 -(void)setStyleClass:(NSString *)styleClass {
-    _styleClass = styleClass;
+    _styleClass = [styleClass.description stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     
     //Precalculate classes array for performance gain
-    NSArray *classes = [styleClass componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-    classes = [classes sortedArrayUsingComparator:^NSComparisonResult(NSString *class1, NSString *class2) {
-        return [class1 compare:class2];
-    }];
-    _styleClasses = classes;
+    NSArray *classes = [_styleClass componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    _styleClasses = [NSSet setWithArray:classes];
 }
 
 - (NSString *)styleClass {
     return _styleClass;
 }
 
-- (NSArray *)styleClasses {
+- (NSSet *)styleClasses {
     return _styleClasses;
 }
 

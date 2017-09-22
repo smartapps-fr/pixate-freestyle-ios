@@ -15,14 +15,15 @@
  */
 
 //
-//  PXUIImageView.m
+//  STKUIImageView.m
 //  Pixate
 //
+//  Modified by Anton Matosov on 12/30/15.
 //  Created by Paul Colton on 9/18/12.
 //  Copyright (c) 2012 Pixate, Inc. All rights reserved.
 //
 
-#import "PXUIImageView.h"
+#import "STKUIImageView.h"
 
 #import "UIView+PXStyling.h"
 #import "UIView+PXStyling-Private.h"
@@ -44,11 +45,11 @@
 
 static NSDictionary *PSEUDOCLASS_MAP;
 
-@implementation PXUIImageView
+@implementation STKUIImageView
 
 + (void)initialize
 {
-    if (self != PXUIImageView.class)
+    if (self != STKUIImageView.class)
         return;
     
     [UIView registerDynamicSubclass:self withElementName:@"image-view"];
@@ -96,7 +97,7 @@ static NSDictionary *PSEUDOCLASS_MAP;
                                                          
             @"-ios-rendering-mode" : ^(PXDeclaration *declaration, PXStylerContext *context) {
                 
-                NSString *mode = [declaration.stringValue lowercaseString];
+                NSString *mode = (declaration.stringValue).lowercaseString;
                 
                 if([mode isEqualToString:@"original"])
                 {

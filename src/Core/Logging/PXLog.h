@@ -18,18 +18,46 @@
 //  PXLog.h
 //  Pixate
 //
+//  Modified by Anton Matosov on 1/4/16.
 //  Created by Paul Colton on 12/8/12.
 //  Copyright (c) 2012 Pixate, Inc. All rights reserved.
 //
 
-#import <CocoaLumberjack/CocoaLumberjack.h>
 
-#ifdef PX_LOGGING
+#if defined(STK_LOGGING) && defined(__has_include) && (__has_include("CocoaLumberjack.h") || __has_include("CocoaLumberjack/CocoaLumberjack.h"))
 
-static const DDLogLevel ddLogLevel = DDLogLevelInfo;
+#define PX_LOGGING STK_LOGGING
+
+# import <CocoaLumberjack/CocoaLumberjack.h>
+
+static const DDLogLevel LogLevelDefault = DDLogLevelWarning;
+
+# define PX_DEFINE_FILE_LOG_LEVEL static const DDLogLevel ddLogLevel = LogLevelDefault;
+
+# define STK_DEFINE_CLASS_LOG_LEVEL                 \
+  static DDLogLevel ddLogLevel = LogLevelDefault;   \
+  + (DDLogLevel)ddLogLevel                          \
+  {                                                 \
+    return ddLogLevel;                              \
+  }                                                 \
+                                                    \
+  + (void)ddSetLogLevel:(DDLogLevel)logLevel        \
+  {                                                 \
+    ddLogLevel = logLevel;                          \
+  }
+
 
 #else
 
-static const DDLogLevel ddLogLevel = DDLogLevelOff;
+# define STK_DEFINE_CLASS_LOG_LEVEL
+# define PX_DEFINE_FILE_LOG_LEVEL
+
+# define DDLogError(...)
+# define DDLogWarn(...)
+# define DDLogInfo(...)
+# define DDLogVerbose(...)
+# define DDLogDebug(...)
+
+typedef enum{DDLogLevelNone} DDLogLevel;
 
 #endif

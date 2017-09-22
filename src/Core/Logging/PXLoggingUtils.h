@@ -22,20 +22,19 @@
 //  Copyright (c) 2012 Pixate, Inc. All rights reserved.
 //
 
-#ifdef PX_LOGGING
 #import <Foundation/Foundation.h>
 #import "PXLog.h"
 
 @protocol PXLoggingDelegate <NSObject>
-- (void)logEntry:(NSString *)logItem atLogLevel:(int)logLevel;
+- (void)logEntry:(NSString *)logItem atLogLevel:(DDLogLevel)logLevel;
 @end
 
 @interface PXLoggingUtils : NSObject
 
 + (void)enableLogging;
++ (void)enablePrettyLogFormatting;
 + (void)enableLoggingToDirectoryPath:(NSString *)path;
-+ (void)setGlobalLoggingLevel:(int)logLevel;
++ (void)setGlobalLoggingLevel:(DDLogLevel)logLevel;
 + (void)addLoggingDelegate:(id <PXLoggingDelegate>)delegate;
 
 @end
-#endif

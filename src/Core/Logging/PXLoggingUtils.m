@@ -22,10 +22,7 @@
 //  Copyright (c) 2012 Pixate, Inc. All rights reserved.
 //
 
-#ifdef PX_LOGGING
 #import "PXLoggingUtils.h"
-#import "DDFileLogger.h"
-#import "DDTTYLogger.h"
 #import "PXFileFunctionLogFormatter.h"
 #import "PXDelegateLogger.h"
 
@@ -33,6 +30,14 @@
 
 + (void)enableLogging
 {
+#ifdef STK_LOGGING
+    [DDLog addLogger:[DDTTYLogger sharedInstance]];
+#endif
+}
+
++ (void)enablePrettyLogFormatting
+{
+#ifdef STK_LOGGING
     // create a custom formatter
     PXFileFunctionLogFormatter *formatter = [[PXFileFunctionLogFormatter alloc] init];
 
@@ -40,18 +45,14 @@
 
     // turn on colorized output and set info and verbose colors as well
     [[DDTTYLogger sharedInstance] setColorsEnabled:YES];
-    [[DDTTYLogger sharedInstance] setForegroundColor:[UIColor greenColor] backgroundColor:nil forFlag:LOG_FLAG_INFO];
-    [[DDTTYLogger sharedInstance] setForegroundColor:[UIColor yellowColor] backgroundColor:nil forFlag:LOG_FLAG_VERBOSE];
-
-    // connect logger
-    [DDLog addLogger:[DDTTYLogger sharedInstance]];
+    [[DDTTYLogger sharedInstance] setForegroundColor:[UIColor greenColor] backgroundColor:nil forFlag:DDLogFlagInfo];
+    [[DDTTYLogger sharedInstance] setForegroundColor:[UIColor yellowColor] backgroundColor:nil forFlag:DDLogFlagVerbose];
+#endif
 }
 
 + (void)enableLoggingToDirectoryPath:(NSString *)path
 {
-    // create a custom formatter
-    PXFileFunctionLogFormatter *formatter = [[PXFileFunctionLogFormatter alloc] init];
-
+#ifdef STK_LOGGING
     if (path.length > 0)
     {
         DDLogFileManagerDefault *manager = [[DDLogFileManagerDefault alloc] initWithLogsDirectory:path];
@@ -63,31 +64,27 @@
     }
     else
     {
-        [[DDTTYLogger sharedInstance] setLogFormatter:formatter];
-
-        // turn on colorized output and set info and verbose colors as well
-        [[DDTTYLogger sharedInstance] setColorsEnabled:YES];
-        [[DDTTYLogger sharedInstance] setForegroundColor:[UIColor greenColor] backgroundColor:nil forFlag:LOG_FLAG_INFO];
-        [[DDTTYLogger sharedInstance] setForegroundColor:[UIColor yellowColor] backgroundColor:nil forFlag:LOG_FLAG_VERBOSE];
-
-        // connect logger
         [DDLog addLogger:[DDTTYLogger sharedInstance]];
     }
+#endif
 }
 
-+ (void)setGlobalLoggingLevel:(int)logLevel
++ (void)setGlobalLoggingLevel:(DDLogLevel)logLevel
 {
+#ifdef STK_LOGGING
     // set default logging levels
-    for (id c in [DDLog registeredClasses])
+    for (Class c in [DDLog registeredClasses])
     {
-        [DDLog setLogLevel:logLevel forClass:c];
+        [DDLog setLevel:logLevel forClass:c];
     }
+#endif
 }
 
 + (void)addLoggingDelegate:(id <PXLoggingDelegate>)delegate
 {
+#ifdef STK_LOGGING
     [DDLog addLogger:[[PXDelegateLogger alloc] initWithDelegate:delegate]];
+#endif
 }
 
 @end
-#endif

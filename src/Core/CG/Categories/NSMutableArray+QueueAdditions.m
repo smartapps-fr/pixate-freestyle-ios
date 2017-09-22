@@ -18,6 +18,7 @@
 //  NSMutableArray+QueueAdditions.m
 //  Pixate
 //
+//  Modified by Anton Matosov on 12/30/15.
 //  Created by Kevin Lindsey on 6/30/12.
 //  Copyright (c) 2012 Pixate, Inc. All rights reserved.
 //
@@ -36,7 +37,7 @@ void PXForceLoadQueueAdditions() {}
 
     if (self.count > 0)
     {
-        result = [self objectAtIndex:0];
+        result = self[0];
 
         [self removeObjectAtIndex:0];
     }
@@ -46,7 +47,16 @@ void PXForceLoadQueueAdditions() {}
 
 - (void)enqueue:(id)object
 {
-    [self addObject:object];
+    [self addObjectIfNotNil:object];
 }
 
+- (BOOL)addObjectIfNotNil:(id)object
+{
+    if (object)
+    {
+        [self addObject:object];
+        return YES;
+    }
+    return NO;
+}
 @end

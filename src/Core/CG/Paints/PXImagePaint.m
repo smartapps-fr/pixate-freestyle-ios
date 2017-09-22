@@ -18,21 +18,23 @@
 //  PXImagePaint.m
 //  Pixate
 //
+//  Modified by Anton Matosov
 //  Created by Kevin Lindsey on 3/27/13.
 //  Copyright (c) 2013 Pixate, Inc. All rights reserved.
 //
 
 #import "PXImagePaint.h"
-#import "PXShapeView.h"
-#import "MAFuture.h"
+#import "STKShapeView.h"
 
 @implementation PXImagePaint
 
 @synthesize blendMode = _blendMode;
 
+STK_DEFINE_CLASS_LOG_LEVEL;
+
 #pragma mark - Initializers
 
-- (id)initWithURL:(NSURL *)url
+- (instancetype)initWithURL:(NSURL *)url
 {
     if (self = [super init]) {
         _imageURL = url;
@@ -52,7 +54,7 @@
 - (BOOL)hasSVGImageURL
 {
     return
-    [[_imageURL.pathExtension lowercaseString] isEqualToString:@"svg"]
+    [(_imageURL.pathExtension).lowercaseString isEqualToString:@"svg"]
     ||  ([@"data" isEqualToString:_imageURL.scheme] && [_imageURL.resourceSpecifier hasPrefix:@"image/svg+xml"]);
 }
 
@@ -69,26 +71,19 @@
         // create image
         if ([self hasSVGImageURL])
         {
-            PXShapeView *shapeView = [[PXShapeView alloc] initWithFrame:bounds];
+            STKShapeView *shapeView = [[STKShapeView alloc] initWithFrame:bounds];
 
             [shapeView loadSceneFromURL:_imageURL];
-            image = [shapeView renderToImage];
+            image = shapeView.renderToImage;
         }
         else
         {
-            if([[_imageURL scheme] isEqualToString:@"asset"])
+            if([_imageURL.scheme isEqualToString:@"asset"])
             {
                 image = [UIImage imageNamed:_imageURL.host];
             }
             else
             {
-                // Use a background 'future' to load the data
-                NSData *data = MABackgroundFuture(^{
-                    NSData *result = [NSData dataWithContentsOfURL:_imageURL];
-                    // Shouldn't return nil from a future
-                    return result ? result : [[NSData alloc] init];
-                });
-
                 CGFloat scale;
 
                 if ([@"data" isEqualToString:_imageURL.scheme])
@@ -98,18 +93,19 @@
                 else
                 {
                     NSString *filename = _imageURL.lastPathComponent;
-                    NSString *basename = [filename stringByDeletingPathExtension];
+                    NSString *basename = filename.stringByDeletingPathExtension;
 
                     scale = [basename hasSuffix:@"@2x"] ? 2.0f : 1.0f;  // TODO: pull out number and use that?
                 }
 
                 // grab image
+                NSData *data = [NSData dataWithContentsOfURL:_imageURL];
                 image = [[UIImage alloc] initWithData:data scale:scale];
                 
                 // log error
                 if(image == nil)
                 {
-                    NSLog(@"Nil image for URL %@", _imageURL);
+                    DDLogError(@"Nil image for URL %@", _imageURL);
                 }
             }
             

@@ -18,6 +18,7 @@
 //  PXNamedMediaExpression.m
 //  Pixate
 //
+//  Modified by Anton Matosov on 12/30/15.
 //  Created by Kevin Lindsey on 1/10/13.
 //  Copyright (c) 2013 Pixate, Inc. All rights reserved.
 //
@@ -45,7 +46,7 @@
     dispatch_once(&onceToken, ^{
         handlers = @{
             @"orientation" : ^BOOL(PXNamedMediaExpression *expression) {
-                UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
+                UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
 
                 switch (orientation) {
                     case UIInterfaceOrientationLandscapeLeft:
@@ -64,11 +65,17 @@
             @"device" : ^BOOL(PXNamedMediaExpression *expression) {
                 
                 static NSString *platform;
+                static NSString *suffix;
                 static dispatch_once_t onceToken;
                 dispatch_once(&onceToken, ^{
                     struct utsname u;
                     uname(&u);
-                    platform = [[NSString stringWithUTF8String:u.machine] lowercaseString];
+                    platform = @(u.machine).lowercaseString;
+
+                    if (platform.length > 3)
+                    {
+                       suffix = [platform substringFromIndex:platform.length - 3];
+                    }
                 });
 
                 NSString *userValue = expression.value;
@@ -76,7 +83,7 @@
                 // First check if we're in simulater
                 if ([platform hasSuffix:@"86"] || [platform isEqual:@"x86_64"])
                 {
-                    NSString *simDevice = [[UIDevice currentDevice].model lowercaseString];
+                    NSString *simDevice = ([UIDevice currentDevice].model).lowercaseString;
                     
                     if([userValue isEqualToString:@"iphone"] || [userValue isEqualToString:@"ipod"])
                     {
@@ -100,11 +107,33 @@
                     }
                     else if([userValue isEqualToString:@"ipad-mini"])
                     {
+                       static dispatch_once_t once;
+                       static NSSet *miniSuffix;
+                       dispatch_once(&once, ^{
+                          miniSuffix = [NSSet setWithArray:@[
+                            @"2,5", // mini wifi
+                            @"2,6", // mini Cellular ATT
+                            @"2,7", // mini Cellular Verizon
+                            @"4,4",
+                            @"4,5",
+                            @"4,6",
+                            @"4,7",
+                            @"4,8",
+                            @"4,9",
+                            @"5,1",
+                            @"5,2",
+                          ]];
+                        });
                         return ([platform hasPrefix:@"ipad"] &&
-                                ([platform hasSuffix:@"2,5"] || // mini wifi
-                                 [platform hasSuffix:@"2,6"] || // mini Cellular ATT
-                                 [platform hasSuffix:@"2,7"]    // mini Cellular Verizon
-                                ));
+                          [miniSuffix containsObject:suffix]
+                        );
+                    }
+                    else if ([userValue isEqualToString:@"ipad-pro"])
+                    {
+                      return ([platform hasPrefix:@"ipad"] &&
+                              ([suffix isEqualToString:@"6,7"] ||
+                               [suffix isEqualToString:@"6,8"]
+                             ));
                     }
                     else if([userValue isEqualToString:@"appletv"])
                     {
@@ -116,31 +145,31 @@
             },
 
             @"device-width" : ^BOOL(PXNamedMediaExpression *expression) {
-                return [[UIScreen mainScreen] bounds].size.width == expression.floatValue;
+                return [UIScreen mainScreen].bounds.size.width == expression.floatValue;
             },
             @"min-device-width" : ^BOOL(PXNamedMediaExpression *expression) {
-                return [[UIScreen mainScreen] bounds].size.width >= expression.floatValue;
+                return [UIScreen mainScreen].bounds.size.width >= expression.floatValue;
             },
             @"max-device-width" : ^BOOL(PXNamedMediaExpression *expression) {
-                return [[UIScreen mainScreen] bounds].size.width <= expression.floatValue;
+                return [UIScreen mainScreen].bounds.size.width <= expression.floatValue;
             },
             @"device-height" : ^BOOL(PXNamedMediaExpression *expression) {
-                return [[UIScreen mainScreen] bounds].size.height == expression.floatValue;
+                return [UIScreen mainScreen].bounds.size.height == expression.floatValue;
             },
             @"min-device-height" : ^BOOL(PXNamedMediaExpression *expression) {
-                return [[UIScreen mainScreen] bounds].size.height >= expression.floatValue;
+                return [UIScreen mainScreen].bounds.size.height >= expression.floatValue;
             },
             @"max-device-height" : ^BOOL(PXNamedMediaExpression *expression) {
-                return [[UIScreen mainScreen] bounds].size.height <= expression.floatValue;
+                return [UIScreen mainScreen].bounds.size.height <= expression.floatValue;
             },
             @"scale" : ^BOOL(PXNamedMediaExpression *expression) {
-                return [[UIScreen mainScreen] scale] == expression.floatValue;
+                return [UIScreen mainScreen].scale == expression.floatValue;
             },
             @"min-scale" : ^BOOL(PXNamedMediaExpression *expression) {
-                return [[UIScreen mainScreen] scale] >= expression.floatValue;
+                return [UIScreen mainScreen].scale >= expression.floatValue;
             },
             @"max-scale" : ^BOOL(PXNamedMediaExpression *expression) {
-                return [[UIScreen mainScreen] scale] <= expression.floatValue;
+                return [UIScreen mainScreen].scale <= expression.floatValue;
             },
             
             @"device-os-version" : ^BOOL(PXNamedMediaExpression *expression) {
@@ -189,7 +218,7 @@
 
 #pragma mark - Initializers
 
-- (id)initWithName:(NSString *)name value:(id)value
+- (instancetype)initWithName:(NSString *)name value:(id)value
 {
     if (self = [super init])
     {
@@ -212,8 +241,8 @@
     if (!_matches) {
         // NOTE: the parser guarantees that _name is lower case
         NSDictionary *handlers = [PXNamedMediaExpression nameHandlers];
-        PXNamedMediaExpressionHandler handler = [handlers objectForKey:_name];
-        _matches = [NSNumber numberWithBool:(handler) ? handler(self) : NO];
+        PXNamedMediaExpressionHandler handler = handlers[_name];
+        _matches = @((handler) ? handler(self) : NO);
     }
     return _matches.boolValue;
 }
@@ -222,11 +251,11 @@
 {
     if ([_value isKindOfClass:[NSNumber class]])
     {
-        return [(NSNumber *)_value floatValue];
+        return ((NSNumber *)_value).floatValue;
     }
     else if ([_value isKindOfClass:[NSString class]])
     {
-        return [(NSString *)_value floatValue];
+        return ((NSString *)_value).floatValue;
     }
     else if ([_value isKindOfClass:[PXDimension class]])
     {

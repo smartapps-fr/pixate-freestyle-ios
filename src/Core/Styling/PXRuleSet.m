@@ -18,13 +18,14 @@
 //  PXRuleSet.m
 //  Pixate
 //
+//  Modified by Anton Matosov on 12/30/15.
 //  Created by Kevin Lindsey on 7/3/12.
 //  Copyright (c) 2012 Pixate, Inc. All rights reserved.
 //
 
 #import "PXRuleSet.h"
 #import "PXSourceWriter.h"
-#import "PXShapeView.h"
+#import "STKShapeView.h"
 #import "PXFontRegistry.h"
 #import "PXCombinator.h"
 
@@ -35,7 +36,7 @@
 
 #pragma mark - Static initializers
 
-+ (id)ruleSetWithMergedRuleSets:(NSArray *)ruleSets
++ (instancetype)ruleSetWithMergedRuleSets:(NSArray *)ruleSets
 {
     PXRuleSet *result = [[PXRuleSet alloc] init];
 
@@ -86,7 +87,7 @@
 
 #pragma mark - Initializers
 
-- (id)init
+- (instancetype)init
 {
     if (self = [super init])
     {
@@ -100,14 +101,7 @@
 
 - (NSArray *)selectors
 {
-    NSArray *result = nil;
-
-    if (selectors)
-    {
-        result = [NSArray arrayWithArray:selectors];
-    }
-
-    return result;
+    return selectors;
 }
 
 - (PXTypeSelector *)targetTypeSelector
@@ -116,7 +110,7 @@
 
     if (selectors.count > 0)
     {
-        id candidate = [selectors objectAtIndex:0];
+        id candidate = selectors[0];
 
         if (candidate)
         {

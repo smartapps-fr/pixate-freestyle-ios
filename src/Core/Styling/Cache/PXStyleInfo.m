@@ -18,6 +18,7 @@
 //  PXStyleInfo.m
 //  Pixate
 //
+//  Modified by Anton Matosov
 //  Created by Kevin Lindsey on 10/2/13.
 //  Copyright (c) 2013 Pixate, Inc. All rights reserved.
 //
@@ -37,6 +38,8 @@
     NSMutableDictionary *declarationsByState_;
     NSMutableDictionary *stylersByState_;
 }
+
+STK_DEFINE_CLASS_LOG_LEVEL;
 
 #pragma mark - Static Methods
 
@@ -98,7 +101,7 @@
                 if (!(*checkPseudoClassFunction).boolValue) {
                     for (id<PXSelector> attribute in selector.attributeExpressions) {
                         if ([attribute isKindOfClass:PXPseudoClassFunction.class]) {
-                            *checkPseudoClassFunction = [NSNumber numberWithBool:YES];
+                            *checkPseudoClassFunction = @YES;
                             break;
                         }
                     }
@@ -140,7 +143,10 @@
     return (result.states.count > 0) ? result : nil;
 }
 
-+ (void)setStyleInfo:(PXStyleInfo *)styleInfo withRuleSets:(NSArray *)ruleSets styleable:(id<PXStyleable>)styleable stateName:(NSString *)stateName
++ (void)setStyleInfo:(PXStyleInfo *)styleInfo
+        withRuleSets:(NSArray *)ruleSets
+           styleable:(id<PXStyleable>)styleable
+           stateName:(NSString *)stateName
 {
     // merge all rule sets into a single rule set based on origin and weight/specificity
     PXRuleSet *mergedRuleSet = [PXRuleSet ruleSetWithMergedRuleSets:ruleSets];
@@ -161,7 +167,7 @@
 
     for (PXDeclaration *declaration in mergedRuleSet.declarations)
     {
-        id<PXStyler> styler = [stylersByProperty objectForKey:declaration.name];
+        id<PXStyler> styler = stylersByProperty[declaration.name];
 
         if (styler)
         {
@@ -184,7 +190,7 @@
 
 #pragma mark - Initializers
 
-- (id)initWithStyleKey:(NSString *)styleKey
+- (instancetype)initWithStyleKey:(NSString *)styleKey
 {
     if (self = [super init])
     {
@@ -198,7 +204,7 @@
 
 - (NSArray *)states
 {
-    return (declarationsByState_ != nil) ? [declarationsByState_ allKeys] : nil;
+    return (declarationsByState_ != nil) ? declarationsByState_.allKeys : nil;
 }
 
 #pragma mark - Methods
@@ -214,7 +220,7 @@
 
         // TODO: check for pre-existing?
 
-        [declarationsByState_ setObject:declarations forKey:stateName];
+        declarationsByState_[stateName] = declarations;
     }
 }
 
@@ -227,18 +233,18 @@
             stylersByState_ = [NSMutableDictionary dictionary];
         }
 
-        [stylersByState_ setObject:stylers forKey:stateName];
+        stylersByState_[stateName] = stylers;
     }
 }
 
 - (NSArray *)declarationsForState:(NSString *)stateName
 {
-    return (declarationsByState_ != nil) ? [declarationsByState_ objectForKey:stateName] : nil;
+    return (declarationsByState_ != nil) ? declarationsByState_[stateName] : nil;
 }
 
 - (NSSet *)stylersForState:(NSString *)stateName
 {
-    return (stylersByState_ != nil) ? [stylersByState_ objectForKey:stateName] : nil;
+    return (stylersByState_ != nil) ? stylersByState_[stateName] : nil;
 }
 
 - (void)applyToStyleable:(id<PXStyleable>)styleable
@@ -246,7 +252,7 @@
     // abort application of style info if the styleable's style key does not match the info's style key
     if ([self.styleKey isEqualToString:styleable.styleKey] == NO)
     {
-        NSLog(@"StyleKey mismatch ('%@' != '%@'). Aborted applyStyleInfo for %@", self.styleKey, styleable.styleKey, [PXStyleUtils descriptionForStyleable:styleable]);
+        DDLogError(@"StyleKey mismatch ('%@' != '%@'). Aborted applyStyleInfo for %@", self.styleKey, styleable.styleKey, [PXStyleUtils descriptionForStyleable:styleable]);
         return;
     }
 
@@ -260,7 +266,8 @@
     for (NSString *stateName in self.states)
     {
         // NOTE: if a styleable does not contain canStylePseudoClass, we assume that if it did, the method would return YES
-        if ([styleable respondsToSelector:@selector(canStylePseudoClass:)] && [styleable canStylePseudoClass:stateName] == NO)
+        if ([styleable respondsToSelector:@selector(canStylePseudoClass:)]
+            && ![styleable canStylePseudoClass:stateName])
         {
             //NSLog(@"skipping state '%@' for styleable: %@", stateName, [PXStyleUtils descriptionForStyleable:styleable]);
 
@@ -275,7 +282,9 @@
             [PXStyleUtils invalidateStyleable:styleable];
         }
 
-        if (![PXStyleUtils stylesOfStyleable:styleable matchDeclarations:activeDeclarations state:stateName])
+        if (![PXStyleUtils stylesOfStyleable:styleable
+                           matchDeclarations:activeDeclarations
+                                       state:stateName])
         {
             NSSet *activeStylers = [self stylersForState:stateName];
 
@@ -294,7 +303,7 @@
                     // process the declarations, in order
                     for (PXDeclaration *declaration in activeDeclarations)
                     {
-                        id<PXStyler> styler = [stylersByProperty objectForKey:declaration.name];
+                        id<PXStyler> styler = stylersByProperty[declaration.name];
 
                         if (styler == currentStyler)
                         {
@@ -343,7 +352,7 @@
         [parts addObject:[NSString stringWithFormat:@"%@ {", stateName]];
 
         // emit declaration
-        for (PXDeclaration *declaration in [declarationsByState_ objectForKey:state])
+        for (PXDeclaration *declaration in declarationsByState_[state])
         {
             [parts addObject:[NSString stringWithFormat:@"  %@", declaration.description]];
         }

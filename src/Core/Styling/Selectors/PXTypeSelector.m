@@ -18,6 +18,7 @@
 //  PXTypeSelector.m
 //  Pixate
 //
+//  Modified by Anton Matosov on 12/30/15.
 //  Created by Kevin Lindsey on 7/9/12.
 //  Copyright (c) 2012 Pixate, Inc. All rights reserved.
 //
@@ -33,33 +34,21 @@
     NSMutableArray *attributeExpressions;
 }
 
-#ifdef PX_LOGGING
-static int ddLogLevel = LOG_LEVEL_WARN;
-
-+ (int)ddLogLevel
-{
-    return ddLogLevel;
-}
-
-+ (void)ddSetLogLevel:(int)logLevel
-{
-    ddLogLevel = logLevel;
-}
-#endif
+STK_DEFINE_CLASS_LOG_LEVEL
 
 #pragma mark - Initializers
 
-- (id)init
+- (instancetype)init
 {
     return [self initWithNamespaceURI:@"*" typeName:@"*"];
 }
 
-- (id)initWithTypeName:(NSString *)type
+- (instancetype)initWithTypeName:(NSString *)type
 {
     return [self initWithNamespaceURI:@"*" typeName:type];
 }
 
-- (id)initWithNamespaceURI:(NSString *)uri typeName:(NSString *)type
+- (instancetype)initWithNamespaceURI:(NSString *)uri typeName:(NSString *)type
 {
     if (self = [super init])
     {
@@ -84,7 +73,7 @@ static int ddLogLevel = LOG_LEVEL_WARN;
 
 - (NSArray *)attributeExpressions
 {
-    return [NSArray arrayWithArray:attributeExpressions];
+    return attributeExpressions;
 }
 
 - (BOOL)hasPseudoClasses
@@ -120,9 +109,9 @@ static int ddLogLevel = LOG_LEVEL_WARN;
     return result;
 }
 
-- (NSArray *)styleClasses
+- (NSSet *)styleClasses
 {
-    NSMutableArray *result = nil;
+    NSMutableSet *result = nil;
 
     for (id<PXSelector> expression in attributeExpressions)
     {
@@ -132,14 +121,14 @@ static int ddLogLevel = LOG_LEVEL_WARN;
 
             if (result == nil)
             {
-                result = [NSMutableArray array];
+                result = [NSMutableSet setWithCapacity:attributeExpressions.count];
             }
 
             [result addObject:classSelector.className];
         }
     }
 
-    return (result != nil) ? [NSArray arrayWithArray:result] : nil;
+    return (result != nil) ? result : nil;
 }
 
 #pragma mark - Methods
@@ -206,7 +195,7 @@ static int ddLogLevel = LOG_LEVEL_WARN;
     // filter by type name
     if (result)
     {
-        if (self.hasUniversalType == NO)
+        if (!self.hasUniversalType)
         {
             result = ([_typeName isEqualToString:element.pxStyleElementName]);
         }
@@ -232,7 +221,7 @@ static int ddLogLevel = LOG_LEVEL_WARN;
         {
             if ([element respondsToSelector:@selector(supportedPseudoElements)])
             {
-                result = ([[element supportedPseudoElements] indexOfObject:self.pseudoElement] != NSNotFound);
+                result = ([element.supportedPseudoElements indexOfObject:self.pseudoElement] != NSNotFound);
             }
             else
             {
@@ -335,7 +324,7 @@ static int ddLogLevel = LOG_LEVEL_WARN;
 {
     NSMutableArray *parts = [NSMutableArray array];
 
-    if ([self hasUniversalNamespace])
+    if (self.hasUniversalNamespace)
     {
         [parts addObject:@"*"];
     }
@@ -349,7 +338,7 @@ static int ddLogLevel = LOG_LEVEL_WARN;
 
     [parts addObject:@"|"];
 
-    if ([self hasUniversalType])
+    if (self.hasUniversalType)
     {
         [parts addObject:@"*"];
     }

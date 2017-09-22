@@ -15,18 +15,19 @@
  */
 
 //
-//  PXShape.m
+//  STKShape.m
 //  Pixate
 //
+//  Modified by Anton Matosov on 12/30/15.
 //  Created by Kevin Lindsey on 5/30/12.
 //  Copyright (c) 2012 Pixate, Inc. All rights reserved.
 //
 
-#import "PXShape.h"
-#import "PXShapeView.h"
+#import "STKShape.h"
+#import "STKShapeView.h"
 #import "PXShadow.h"
 
-@implementation PXShape
+@implementation STKShape
 
 @synthesize parent = _parent;
 @synthesize owningDocument = _owningDocument;
@@ -43,7 +44,7 @@
 
 #pragma mark - Initializers
 
-- (id)init
+- (instancetype)init
 {
     self = [super init];
 
@@ -71,7 +72,7 @@
 {
     if (!self->_path)
     {
-        self->_path = [self newPath];
+        self->_path = self.newPath;
     }
 
     return self->_path;
@@ -156,7 +157,7 @@
     }
 }
 
-- (void)setClippingPath:(PXShape *)clippingPath
+- (void)setClippingPath:(STKShape *)clippingPath
 {
     if (self->_clippingPath != clippingPath)
     {

@@ -18,6 +18,7 @@
 //  PXUICollectionViewDelegate.m
 //  Pixate
 //
+//  Modified by Anton Matosov on 12/30/15.
 //  Created by Paul Colton on 12/2/13.
 //  Copyright (c) 2013 Pixate, Inc. All rights reserved.
 //
@@ -30,10 +31,11 @@
 #import "UIView+PXStyling-Private.h"
 #import "PXStylingMacros.h"
 #import "PXUICollectionViewCell.h"
+#import "UICollectionViewCell+STKStyling.h"
 
 @implementation CGSizeWithFlag
 
-- (id)init
+- (instancetype)init
 {
     self = [super init];
     if (self) {
@@ -53,7 +55,7 @@
 
 @implementation PXUICollectionViewDelegate
 
-- (id)init
+- (instancetype)init
 {
     self = [super init];
     if (self) {
@@ -64,27 +66,27 @@
 
 #pragma mark - UICollectionViewDataSource
 
+/// This is required protocol method, so keep it as simple forward
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return [[((PXProxy *)collectionView.dataSource) baseObject] collectionView:collectionView numberOfItemsInSection:section];
+    return [((PXProxy *)collectionView.dataSource).baseObject collectionView:collectionView numberOfItemsInSection:section];
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView
                   cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     id baseObject = collectionView.dataSource;
-    
     if([baseObject isProxy])
     {
-        baseObject = [((PXProxy *) collectionView.dataSource) baseObject];
+        baseObject = ((PXProxy *)baseObject).baseObject;
     }
     
     // Make sure the base object has implemented the call
-    if([baseObject respondsToSelector:@selector(collectionView:cellForItemAtIndexPath:)] == NO)
+    if(![baseObject respondsToSelector:@selector(collectionView:cellForItemAtIndexPath:)])
     {
         return nil;
     }
-    
+
     UICollectionViewCell *cell = [baseObject collectionView:collectionView cellForItemAtIndexPath:indexPath];
 
     // See if we got a cell
@@ -92,16 +94,13 @@
     {
         return nil;
     }
-    
-    // Check to see if it's been subclassed yet
-    if([UIView subclassIfNeeded:[PXUICollectionViewCell class] object:cell] == YES)
-    {
-        cell.styleMode = PXStylingNormal;
-    }
+
+    cell.pxStyleParent = collectionView;
 
     [PXStyleUtils setItemIndex:indexPath forObject:cell];
-    
-    [UIView updateStyles:cell recursively:YES];
+
+    // This will call update styles if styling is still enabled
+    cell.styleMode = PXStylingNormal;
 
     [PXStyleUtils setItemIndex:nil forObject:cell];
     
@@ -114,14 +113,14 @@
                   layout:(UICollectionViewLayout*)collectionViewLayout
   sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Set a default value in case we find nothing (per apple docs)
+    // Set a default value of UICollectionViewFlowLayout (per apple docs)
     CGSize itemSize = CGSizeMake(50, 50);
 
     id baseObject = collectionView.delegate;
-    
+
     if([baseObject isProxy])
     {
-        baseObject = [((PXProxy *) collectionView.delegate) baseObject];
+        baseObject = ((PXProxy *) collectionView.delegate).baseObject;
     }
 
     // See if the base object implemented this call and if so, get the output
@@ -142,5 +141,22 @@
     return self.itemSize.isSet ? self.itemSize.size : itemSize;
 }
 
+- (BOOL)respondsToSelector:(SEL)aSelector
+{
+    if (aSelector == @selector(collectionView:layout:sizeForItemAtIndexPath:) &&
+        !self.itemSize.isSet)
+    {
+        id baseObject = self.collectionView.delegate;
+        if ([baseObject isProxy])
+        {
+            baseObject = ((PXProxy*)baseObject).baseObject;
+        }
+        if (![baseObject respondsToSelector:@selector(collectionView:layout:sizeForItemAtIndexPath:)])
+        {
+            return NO;
+        }
+    }
+    return [super respondsToSelector:aSelector];
+}
 
 @end

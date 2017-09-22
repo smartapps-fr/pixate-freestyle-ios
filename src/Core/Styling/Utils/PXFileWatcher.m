@@ -18,6 +18,7 @@
 //  PXFileWatcher
 //  Pixate
 //
+//  Modified by Anton Matosov on 12/30/15.
 //  Created by Paul Colton on 9/27/12.
 //  Copyright (c) 2012 Pixate, Inc. All rights reserved.
 //
@@ -39,7 +40,7 @@
 
 - (void) watchFile:(NSString *) filePath handler:(dispatch_block_t) handler
 {
-    int fildes = open([filePath fileSystemRepresentation], O_EVTONLY);
+    int fildes = open(filePath.fileSystemRepresentation, O_EVTONLY);
     
     if(fildes > 0)
     {
@@ -75,13 +76,17 @@
                     pending = YES;
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.2 * NSEC_PER_SEC),
                                    dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                        //NSLog(@"handler called");
-                        handler();
-                        pending = NO;
+
+                            dispatch_async(dispatch_get_main_queue(), ^
+                            {
+                                handler();
+                                pending = NO;
+
+                                [[PXFileWatcher sharedInstance] watchFile:filePath handler:handler];
+                            });
                     });
                 }
 
-                [[PXFileWatcher sharedInstance] watchFile:filePath handler:handler];
             }
 
         });

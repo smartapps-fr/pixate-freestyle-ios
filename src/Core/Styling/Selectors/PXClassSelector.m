@@ -18,6 +18,7 @@
 //  PXClassSelector.m
 //  Pixate
 //
+//  Modified by Anton Matosov on 12/30/15.
 //  Created by Kevin Lindsey on 9/1/12.
 //  Copyright (c) 2012 Pixate, Inc. All rights reserved.
 //
@@ -34,23 +35,11 @@
 
 @synthesize className = className_;
 
-#ifdef PX_LOGGING
-static int ddLogLevel = LOG_LEVEL_WARN;
-
-+ (int)ddLogLevel
-{
-    return ddLogLevel;
-}
-
-+ (void)ddSetLogLevel:(int)logLevel
-{
-    ddLogLevel = logLevel;
-}
-#endif
+STK_DEFINE_CLASS_LOG_LEVEL
 
 #pragma mark - Initializers
 
-- (id)initWithClassName:(NSString *)name
+- (instancetype)initWithClassName:(NSString *)name
 {
     if (self = [super init])
     {

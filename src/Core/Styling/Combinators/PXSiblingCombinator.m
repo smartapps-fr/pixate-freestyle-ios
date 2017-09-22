@@ -18,6 +18,7 @@
 //  PXSiblingCombinator.m
 //  Pixate
 //
+//  Modified by Anton Matosov on 12/30/15.
 //  Created by Kevin Lindsey on 9/25/12.
 //  Copyright (c) 2012 Pixate, Inc. All rights reserved.
 //
@@ -27,19 +28,7 @@
 
 @implementation PXSiblingCombinator
 
-#ifdef PX_LOGGING
-static int ddLogLevel = LOG_LEVEL_WARN;
-
-+ (int)ddLogLevel
-{
-    return ddLogLevel;
-}
-
-+ (void)ddSetLogLevel:(int)logLevel
-{
-    ddLogLevel = logLevel;
-}
-#endif
+STK_DEFINE_CLASS_LOG_LEVEL
 
 #pragma mark - Getters
 
@@ -66,7 +55,7 @@ static int ddLogLevel = LOG_LEVEL_WARN;
 
             for (NSUInteger i = 0; i < elementIndex && result == NO; i++)
             {
-                id previousSibling = [children objectAtIndex:i];
+                id previousSibling = children[i];
 
                 if ([previousSibling conformsToProtocol:@protocol(PXStyleable)])
                 {

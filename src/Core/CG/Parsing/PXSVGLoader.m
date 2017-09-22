@@ -18,6 +18,7 @@
 //  PXSVGLoader.m
 //  Pixate
 //
+//  Modified by Anton Matosov on 12/30/15.
 //  Created by Kevin Lindsey on 6/4/12.
 //  Copyright (c) 2012 Pixate, Inc. All rights reserved.
 //
@@ -71,37 +72,66 @@ static PXValueParser *VALUE_PARSER;
     loaderClass = class;
 }
 
+
++ (NSCache *)prv_cache
+{
+    static NSCache *shapeCache;
+    static dispatch_once_t once;
+    dispatch_once(&once, ^{
+        shapeCache = [[NSCache alloc] init];
+        shapeCache.name = @"StylingKit Shape Cache";
+
+        shapeCache.countLimit = PixateFreestyle.configuration.imageCacheCount;
+    });
+    return shapeCache;
+}
+
 #pragma mark - Static Methods
 
 + (PXShapeDocument *) loadFromURL:(NSURL *)URL
 {
+    id cacheKey = URL.absoluteURL;
+    PXShapeDocument *document = [[self prv_cache] objectForKey:cacheKey];
+    if (document == nil)
+    {
+        document = [self prv_loadDocumentFromURL:URL];
+
+        [[self prv_cache] setObject:document
+                             forKey:cacheKey];
+    }
+
+    return document;
+}
+
++ (PXShapeDocument*)prv_loadDocumentFromURL:(NSURL*)URL
+{
+    PXShapeDocument *document;
     NSData *data = [NSData dataWithContentsOfURL:URL];
 
     // create and init NSXMLParser object
     NSXMLParser *nsXmlParser = [[NSXMLParser alloc] initWithData:data];
-    
+
     // create and init our delegate
     Class loader = (loaderClass) ? loaderClass : [PXSVGLoader class];
     PXSVGLoader *parser = [[loader alloc] init];
-    
+
     // save reference to URL for errors
     parser.URL = URL;
-    
+
     // set delegate
-    [nsXmlParser setDelegate:parser];
-    
+    nsXmlParser.delegate = parser;
+
     // parsing...
     BOOL success = [nsXmlParser parse];
-    
+
     // test the result
     if (!success)
     {
-        //        [parser logErrorMessageWithFormat:@"Error parsing document: %@", URL];
+        [parser logErrorMessageWithFormat:@"Error parsing SVG document from URL: %@", URL];
     }
-    
-    PXShapeDocument *document = parser->document;
+
+    document = parser->document;
     document.shape = parser->result;
-    
     return document;
 }
 
@@ -115,7 +145,7 @@ static PXValueParser *VALUE_PARSER;
     PXSVGLoader *parser = [[loader alloc] init];
 
     // set delegate
-    [nsXmlParser setDelegate:parser];
+    nsXmlParser.delegate = parser;
 
     // parsing...
     BOOL success = [nsXmlParser parse];
@@ -123,7 +153,7 @@ static PXValueParser *VALUE_PARSER;
     // test the result
     if (!success)
     {
-//        [parser logErrorMessageWithFormat:@"Error parsing document: %@", URL];
+        [parser logErrorMessageWithFormat:@"Error parsing SVG document from data"];
     }
 
     PXShapeDocument *document = parser->document;
@@ -134,7 +164,7 @@ static PXValueParser *VALUE_PARSER;
 
 #pragma mark - Initializers
 
--(id)init
+-(instancetype)init
 {
     self = [super init];
 
@@ -213,10 +243,10 @@ didStartElement:(NSString *)elementName
 
     if (selectorPointer)
     {
-        SEL selector = [selectorPointer pointerValue];
+        SEL selector = selectorPointer.pointerValue;
 
         // merge style properties with attribute values. Style declarations override attributes
-        NSString *style = [attributeDict objectForKey:@"style"];
+        NSString *style = attributeDict[@"style"];
 
         if (style)
         {
@@ -229,10 +259,10 @@ didStartElement:(NSString *)elementName
 
                 if (parts.count == 2)
                 {
-                    NSString *name = [[parts objectAtIndex:0] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-                    NSString *value = [[parts objectAtIndex:1] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+                    NSString *name = [parts[0] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+                    NSString *value = [parts[1] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
 
-                    [newAttributeDict setObject:value forKey:name];
+                    newAttributeDict[name] = value;
                 }
                 // else warn?
             }
@@ -304,16 +334,16 @@ didStartElement:(NSString *)elementName
     CGFloat width;
     CGFloat height;
 
-    NSString *viewBox = [attributeDict objectForKey:@"viewBox"];
+    NSString *viewBox = attributeDict[@"viewBox"];
     NSArray *parts = [viewBox componentsSeparatedByString:@" "];
 
     // set viewport
     if (parts.count == 4)
     {
-        x = [[parts objectAtIndex:0] floatValue];
-        y = [[parts objectAtIndex:1] floatValue];
-        width = [[parts objectAtIndex:2] floatValue];
-        height = [[parts objectAtIndex:3] floatValue];
+        x = [parts[0] floatValue];
+        y = [parts[1] floatValue];
+        width = [parts[2] floatValue];
+        height = [parts[3] floatValue];
 
         // NOTE: we ignore any specified width/height on this branch because the view containing
         // this SVG will have it's own width and height. We probably shouldn't do that, but so
@@ -322,8 +352,8 @@ didStartElement:(NSString *)elementName
     else
     {
         // default to specified width and height. X and Y will be zero in this case
-        width = [self numberFromString:[attributeDict objectForKey:@"width"]];
-        height = [self numberFromString:[attributeDict objectForKey:@"height"]];
+        width = [self numberFromString:attributeDict[@"width"]];
+        height = [self numberFromString:attributeDict[@"height"]];
     }
 
     newGroup.viewport = CGRectMake(x, y, width, height);
@@ -341,10 +371,10 @@ didStartElement:(NSString *)elementName
     PXShapeGroup *newGroup = [[PXShapeGroup alloc] init];
 
     // TODO: set all inherited properties
-    newGroup.opacity = [self opacityFromString:[attributeDict objectForKey:@"opacity"]];
+    newGroup.opacity = [self opacityFromString:attributeDict[@"opacity"]];
 
     // id
-    NSString *ident = [attributeDict objectForKey:@"id"];
+    NSString *ident = attributeDict[@"id"];
 
     if (ident)
     {
@@ -352,7 +382,7 @@ didStartElement:(NSString *)elementName
     }
 
     // transform
-    newGroup.transform = [self transformFromString:[attributeDict objectForKey:@"transform"]];
+    newGroup.transform = [self transformFromString:attributeDict[@"transform"]];
 
     // set viewport settings, if we have those
     [self applyViewport:attributeDict forGroup:newGroup];
@@ -367,11 +397,11 @@ didStartElement:(NSString *)elementName
 - (void)startPathElement:(NSDictionary *)attributeDict
 {
     // add path to current group
-    NSString *d = [attributeDict objectForKey:@"d"];
+    NSString *d = attributeDict[@"d"];
 
     if (d)
     {
-        PXPath *path = [PXPath createPathFromPathData:d];
+        STKPath *path = [STKPath createPathFromPathData:d];
 
         [self applyStyles:attributeDict forShape:path];
         [self addShape:path];
@@ -381,12 +411,12 @@ didStartElement:(NSString *)elementName
 - (void)startRectElement:(NSDictionary *)attributeDict
 {
     // add path to current group
-    CGFloat x = [self numberFromString:[attributeDict objectForKey:@"x"]];
-    CGFloat y = [self numberFromString:[attributeDict objectForKey:@"y"]];
-    CGFloat width = [self numberFromString:[attributeDict objectForKey:@"width"]];
-    CGFloat height = [self numberFromString:[attributeDict objectForKey:@"height"]];
-    CGFloat rx = [self numberFromString:[attributeDict objectForKey:@"rx"]];
-    CGFloat ry = [self numberFromString:[attributeDict objectForKey:@"ry"]];
+    CGFloat x = [self numberFromString:attributeDict[@"x"]];
+    CGFloat y = [self numberFromString:attributeDict[@"y"]];
+    CGFloat width = [self numberFromString:attributeDict[@"width"]];
+    CGFloat height = [self numberFromString:attributeDict[@"height"]];
+    CGFloat rx = [self numberFromString:attributeDict[@"rx"]];
+    CGFloat ry = [self numberFromString:attributeDict[@"ry"]];
 
     PXRectangle *rectangle = [[PXRectangle alloc] initWithRect:CGRectMake(x, y, width, height)];
     rectangle.cornerRadii = CGSizeMake(rx, ry);
@@ -397,10 +427,10 @@ didStartElement:(NSString *)elementName
 
 - (void)startLineElement:(NSDictionary *)attributeDict
 {
-    CGFloat x1 = [self numberFromString:[attributeDict objectForKey:@"x1"]];
-    CGFloat y1 = [self numberFromString:[attributeDict objectForKey:@"y1"]];
-    CGFloat x2 = [self numberFromString:[attributeDict objectForKey:@"x2"]];
-    CGFloat y2 = [self numberFromString:[attributeDict objectForKey:@"y2"]];
+    CGFloat x1 = [self numberFromString:attributeDict[@"x1"]];
+    CGFloat y1 = [self numberFromString:attributeDict[@"y1"]];
+    CGFloat x2 = [self numberFromString:attributeDict[@"x2"]];
+    CGFloat y2 = [self numberFromString:attributeDict[@"y2"]];
 
     PXLine *line = [[PXLine alloc] initX1:x1 y1:y1 x2:x2 y2:y2];
 
@@ -410,9 +440,9 @@ didStartElement:(NSString *)elementName
 
 - (void)startCircleElement:(NSDictionary *)attributeDict
 {
-    CGFloat cx = [self numberFromString:[attributeDict objectForKey:@"cx"]];
-    CGFloat cy = [self numberFromString:[attributeDict objectForKey:@"cy"]];
-    CGFloat r = [self numberFromString:[attributeDict objectForKey:@"r"]];
+    CGFloat cx = [self numberFromString:attributeDict[@"cx"]];
+    CGFloat cy = [self numberFromString:attributeDict[@"cy"]];
+    CGFloat r = [self numberFromString:attributeDict[@"r"]];
 
     PXCircle *circle = [[PXCircle alloc] initCenter:CGPointMake(cx, cy) radius:r];
 
@@ -422,10 +452,10 @@ didStartElement:(NSString *)elementName
 
 - (void)startEllipseElement:(NSDictionary *)attributeDict
 {
-    CGFloat cx = [self numberFromString:[attributeDict objectForKey:@"cx"]];
-    CGFloat cy = [self numberFromString:[attributeDict objectForKey:@"cy"]];
-    CGFloat rx = [self numberFromString:[attributeDict objectForKey:@"rx"]];
-    CGFloat ry = [self numberFromString:[attributeDict objectForKey:@"ry"]];
+    CGFloat cx = [self numberFromString:attributeDict[@"cx"]];
+    CGFloat cy = [self numberFromString:attributeDict[@"cy"]];
+    CGFloat rx = [self numberFromString:attributeDict[@"rx"]];
+    CGFloat ry = [self numberFromString:attributeDict[@"ry"]];
 
     PXEllipse *ellipse = [[PXEllipse alloc] initCenter:CGPointMake(cx, cy) radiusX:rx radiusY:ry];
 
@@ -435,16 +465,16 @@ didStartElement:(NSString *)elementName
 
 - (void)startLinearGradientElement:(NSDictionary *)attributeDict
 {
-    NSString *name = [attributeDict objectForKey:@"id"];
+    NSString *name = attributeDict[@"id"];
 
     if (name)
     {
-        CGFloat x1 = [self numberFromString:[attributeDict objectForKey:@"x1"]];
-        CGFloat y1 = [self numberFromString:[attributeDict objectForKey:@"y1"]];
-        CGFloat x2 = [self numberFromString:[attributeDict objectForKey:@"x2"]];
-        CGFloat y2 = [self numberFromString:[attributeDict objectForKey:@"y2"]];
-        NSString *gradientUnits = [attributeDict objectForKey:@"gradientUnits"];
-        CGAffineTransform transform = [self transformFromString:[attributeDict objectForKey:@"gradientTransform"]];
+        CGFloat x1 = [self numberFromString:attributeDict[@"x1"]];
+        CGFloat y1 = [self numberFromString:attributeDict[@"y1"]];
+        CGFloat x2 = [self numberFromString:attributeDict[@"x2"]];
+        CGFloat y2 = [self numberFromString:attributeDict[@"y2"]];
+        NSString *gradientUnits = attributeDict[@"gradientUnits"];
+        CGAffineTransform transform = [self transformFromString:attributeDict[@"gradientTransform"]];
 
         PXLinearGradient *gradient = [[PXLinearGradient alloc] init];
         gradient.p1 = CGPointMake(x1, y1);
@@ -472,17 +502,17 @@ didStartElement:(NSString *)elementName
 
 - (void)startRadialGradientElement:(NSDictionary *)attributeDict
 {
-    NSString *name = [attributeDict objectForKey:@"id"];
+    NSString *name = attributeDict[@"id"];
 
     if (name)
     {
-        CGFloat cx = [self numberFromString:[attributeDict objectForKey:@"cx"]];
-        CGFloat cy = [self numberFromString:[attributeDict objectForKey:@"cy"]];
-        CGFloat radius = [self numberFromString:[attributeDict objectForKey:@"r"]];
-        NSString *fxString = [attributeDict objectForKey:@"fx"];
-        NSString *fyString = [attributeDict objectForKey:@"fy"];
-        NSString *gradientUnits = [attributeDict objectForKey:@"gradientUnits"];
-        CGAffineTransform transform = [self transformFromString:[attributeDict objectForKey:@"gradientTransform"]];
+        CGFloat cx = [self numberFromString:attributeDict[@"cx"]];
+        CGFloat cy = [self numberFromString:attributeDict[@"cy"]];
+        CGFloat radius = [self numberFromString:attributeDict[@"r"]];
+        NSString *fxString = attributeDict[@"fx"];
+        NSString *fyString = attributeDict[@"fy"];
+        NSString *gradientUnits = attributeDict[@"gradientUnits"];
+        CGAffineTransform transform = [self transformFromString:attributeDict[@"gradientTransform"]];
 
         PXRadialGradient *gradient = [[PXRadialGradient alloc] init];
         gradient.endCenter = CGPointMake(cx, cy);
@@ -521,12 +551,12 @@ didStartElement:(NSString *)elementName
 {
     if (currentGradient)
     {
-        CGFloat offset = [self numberFromString:[attributeDict objectForKey:@"offset"]];
-        NSString *stopColorString = [attributeDict objectForKey:@"stop-color"];
+        CGFloat offset = [self numberFromString:attributeDict[@"offset"]];
+        NSString *stopColorString = attributeDict[@"stop-color"];
 
         if (stopColorString)
         {
-            NSString *stopOpacityString = [attributeDict objectForKey:@"stop-opacity"];
+            NSString *stopOpacityString = attributeDict[@"stop-opacity"];
             UIColor *stopColor = [VALUE_PARSER parseColor:[PXValueParser lexemesForSource:stopColorString]];
 
             if (stopOpacityString != nil && stopColor != nil)
@@ -549,7 +579,7 @@ didStartElement:(NSString *)elementName
 
 - (void)startPolygonElement:(NSDictionary *)attributeDict
 {
-    PXPolygon *polygon = [self makePolygon:[attributeDict objectForKey:@"points"]];
+    PXPolygon *polygon = [self makePolygon:attributeDict[@"points"]];
 
     polygon.closed = YES;
 
@@ -559,7 +589,7 @@ didStartElement:(NSString *)elementName
 
 - (void)startPolylineElement:(NSDictionary *)attributeDict
 {
-    PXPolygon *polygon = [self makePolygon:[attributeDict objectForKey:@"points"]];
+    PXPolygon *polygon = [self makePolygon:attributeDict[@"points"]];
 
     polygon.closed = NO;
 
@@ -586,11 +616,11 @@ didStartElement:(NSString *)elementName
 
 - (void)startArcElement:(NSDictionary *)attributeDict
 {
-    CGFloat cx = [self numberFromString:[attributeDict objectForKey:@"cx"]];
-    CGFloat cy = [self numberFromString:[attributeDict objectForKey:@"cy"]];
-    CGFloat r = [self numberFromString:[attributeDict objectForKey:@"r"]];
-    CGFloat startAngle = [self numberFromString:[attributeDict objectForKey:@"start-angle"]];
-    CGFloat endAngle = [self numberFromString:[attributeDict objectForKey:@"end-angle"]];
+    CGFloat cx = [self numberFromString:attributeDict[@"cx"]];
+    CGFloat cy = [self numberFromString:attributeDict[@"cy"]];
+    CGFloat r = [self numberFromString:attributeDict[@"r"]];
+    CGFloat startAngle = [self numberFromString:attributeDict[@"start-angle"]];
+    CGFloat endAngle = [self numberFromString:attributeDict[@"end-angle"]];
 
     PXArc *arc = [[PXArc alloc] init];
     arc.center = CGPointMake(cx, cy);
@@ -604,11 +634,11 @@ didStartElement:(NSString *)elementName
 
 - (void)startPieElement:(NSDictionary *)attributeDict
 {
-    CGFloat cx = [self numberFromString:[attributeDict objectForKey:@"cx"]];
-    CGFloat cy = [self numberFromString:[attributeDict objectForKey:@"cy"]];
-    CGFloat r = [self numberFromString:[attributeDict objectForKey:@"r"]];
-    CGFloat startAngle = [self numberFromString:[attributeDict objectForKey:@"start-angle"]];
-    CGFloat endAngle = [self numberFromString:[attributeDict objectForKey:@"end-angle"]];
+    CGFloat cx = [self numberFromString:attributeDict[@"cx"]];
+    CGFloat cy = [self numberFromString:attributeDict[@"cy"]];
+    CGFloat r = [self numberFromString:attributeDict[@"r"]];
+    CGFloat startAngle = [self numberFromString:attributeDict[@"start-angle"]];
+    CGFloat endAngle = [self numberFromString:attributeDict[@"end-angle"]];
 
     PXPie *pie = [[PXPie alloc] init];
     pie.center = CGPointMake(cx, cy);
@@ -629,13 +659,13 @@ didStartElement:(NSString *)elementName
 
 - (void)endSVGElement
 {
-    result = [stack objectAtIndex:0];
+    result = stack[0];
     [stack removeObjectAtIndex:0];
 }
 
 - (void)endGElement
 {
-    [stack removeObject:[stack lastObject]];
+    [stack removeObject:stack.lastObject];
 }
 
 - (void)endGradientElement
@@ -654,19 +684,19 @@ didStartElement:(NSString *)elementName
 
 #pragma mark - Supporting Methods
 
-- (void) addShape:(PXShape *)shape
+- (void) addShape:(STKShape *)shape
 {
-    PXShapeGroup *group = [stack lastObject];
+    PXShapeGroup *group = stack.lastObject;
 
     [group addShape:shape];
 }
 
-- (void)applyStyles:(NSDictionary *)attributeDict forShape:(PXShape *)shape
+- (void)applyStyles:(NSDictionary *)attributeDict forShape:(STKShape *)shape
 {
-    NSString *strokeDashArray = [attributeDict objectForKey:@"stroke-dasharray"];
-    NSString *fillColor = [attributeDict objectForKey:@"fill"];
+    NSString *strokeDashArray = attributeDict[@"stroke-dasharray"];
+    NSString *fillColor = attributeDict[@"fill"];
 
-    shape.opacity = [self opacityFromString:[attributeDict objectForKey:@"opacity"]];
+    shape.opacity = [self opacityFromString:attributeDict[@"opacity"]];
 
     // fill
     if (!fillColor)
@@ -674,12 +704,12 @@ didStartElement:(NSString *)elementName
         fillColor = @"#000000";
     }
 
-    shape.fill = [self paintFromString:fillColor withOpacityString:[attributeDict objectForKey:@"fill-opacity"]];
+    shape.fill = [self paintFromString:fillColor withOpacityString:attributeDict[@"fill-opacity"]];
 
     // stroke
     PXStroke *stroke = [[PXStroke alloc] init];
 
-    NSString *strokeType = [attributeDict objectForKey:@"stroke-type"];
+    NSString *strokeType = attributeDict[@"stroke-type"];
 
     if (strokeType)
     {
@@ -694,27 +724,25 @@ didStartElement:(NSString *)elementName
         // else use default
     }
 
-    stroke.color = [self paintFromString:[attributeDict objectForKey:@"stroke"] withOpacityString:[attributeDict objectForKey:@"stroke-opacity"]];
-    stroke.width = [self numberFromString:[attributeDict objectForKey:@"stroke-width"]];
+    stroke.color = [self paintFromString:attributeDict[@"stroke"] withOpacityString:attributeDict[@"stroke-opacity"]];
+    stroke.width = [self numberFromString:attributeDict[@"stroke-width"]];
 
     if (strokeDashArray)
     {
-        NSMutableArray *dashes = [self numberArrayFromString:strokeDashArray];
-
-        stroke.dashArray = [NSArray arrayWithArray:dashes];
+        stroke.dashArray = [self numberArrayFromString:strokeDashArray];
     }
 
-    stroke.dashOffset = [self numberFromString:[attributeDict objectForKey:@"stroke-dashoffset"]];
-    stroke.lineCap = [self lineCapFromString:[attributeDict objectForKey:@"stroke-linecap"]];
-    stroke.lineJoin = [self lineJoinFromString:[attributeDict objectForKey:@"stroke-linejoin"]];
+    stroke.dashOffset = [self numberFromString:attributeDict[@"stroke-dashoffset"]];
+    stroke.lineCap = [self lineCapFromString:attributeDict[@"stroke-linecap"]];
+    stroke.lineJoin = [self lineJoinFromString:attributeDict[@"stroke-linejoin"]];
 
-    NSString *miterLimit = [attributeDict objectForKey:@"stroke-miterlimit"];
-    stroke.miterLimit = (miterLimit) ? [self numberFromString:miterLimit] : 4.0;
+    NSString *miterLimit = attributeDict[@"stroke-miterlimit"];
+    stroke.miterLimit = (miterLimit) ? [self numberFromString:miterLimit] : 4.0f;
 
     shape.stroke = stroke;
 
     // visibility
-    NSString *visibility = [attributeDict objectForKey:@"visibility"];
+    NSString *visibility = attributeDict[@"visibility"];
 
     if (visibility)
     {
@@ -722,7 +750,7 @@ didStartElement:(NSString *)elementName
     }
 
     // id
-    NSString *ident = [attributeDict objectForKey:@"id"];
+    NSString *ident = attributeDict[@"id"];
 
     if (ident)
     {
@@ -730,28 +758,28 @@ didStartElement:(NSString *)elementName
     }
 
     // transform
-    shape.transform = [self transformFromString:[attributeDict objectForKey:@"transform"]];
+    shape.transform = [self transformFromString:attributeDict[@"transform"]];
 }
 
 - (void)applyViewport:(NSDictionary *)attributeDict forGroup:(PXShapeGroup *)group
 {
-    NSString *par = [attributeDict objectForKey:@"preserveAspectRatio"];
+    NSString *par = attributeDict[@"preserveAspectRatio"];
 
     if (par)
     {
         NSArray *parts = [par componentsSeparatedByString:@" "];
-        NSUInteger partCount = [parts count];
+        NSUInteger partCount = parts.count;
         AlignViewPortType alignment = kAlignViewPortXMidYMid;
         CropType crop = kCropTypeMeet;
 
         if ( 1 <= partCount && partCount <= 2)
         {
-            NSString *alignmentString = [parts objectAtIndex: 0];
-            NSNumber *typeNumber = [alignTypes objectForKey:alignmentString];
+            NSString *alignmentString = parts[0];
+            NSNumber *typeNumber = alignTypes[alignmentString];
 
             if (typeNumber)
             {
-                alignment = [typeNumber intValue];
+                alignment = typeNumber.intValue;
             }
             else
             {
@@ -760,7 +788,7 @@ didStartElement:(NSString *)elementName
 
             if (partCount == 2)
             {
-                NSString *cropString = [parts objectAtIndex:1];
+                NSString *cropString = parts[1];
 
                 if ([@"meet" isEqualToString:cropString])
                 {
@@ -842,13 +870,13 @@ didStartElement:(NSString *)elementName
 
 - (CGFloat)opacityFromString:(NSString *)opacityValue
 {
-    return (opacityValue) ? [opacityValue floatValue] : 1.0;
+    return (opacityValue) ? opacityValue.floatValue : 1.0;
 }
 
 - (PXPolygon *)makePolygon:(NSString *)pointString
 {
     NSMutableArray *coords = [self numberArrayFromString:pointString];
-    NSUInteger length = [coords count];
+    NSUInteger length = coords.count;
 
     if ((length % 2) == 1) length--;
 
@@ -856,13 +884,13 @@ didStartElement:(NSString *)elementName
 
     for (int i = 0; i < length; i += 2)
     {
-        CGFloat x = [[coords objectAtIndex:i] floatValue];
-        CGFloat y = [[coords objectAtIndex:i + 1] floatValue];
+        CGFloat x = [coords[i] floatValue];
+        CGFloat y = [coords[i + 1] floatValue];
 
         [points addObject:[NSValue valueWithCGPoint:CGPointMake(x, y)]];
     }
 
-    return [[PXPolygon alloc] initWithPoints:[NSArray arrayWithArray:points]];
+    return [[PXPolygon alloc] initWithPoints:points];
 }
 
 - (id<PXPaint>)paintFromString:(NSString *)attributeValue withOpacityString:(NSString *)opacityValue
@@ -886,11 +914,11 @@ didStartElement:(NSString *)elementName
         else if ([attributeValue hasPrefix:@"url(#"])
         {
             NSUInteger startingIndex = 5;
-            NSUInteger endingIndex = [attributeValue length] - 1;
+            NSUInteger endingIndex = attributeValue.length - 1;
 
             NSString *name = [attributeValue substringWithRange:NSMakeRange(startingIndex, endingIndex - startingIndex)];
 
-            paint = [gradients objectForKey:name];
+            paint = gradients[name];
         }
         else
         {
@@ -918,15 +946,15 @@ didStartElement:(NSString *)elementName
     {
         if ([attributeValue hasSuffix:@"px"])
         {
-            number = [[attributeValue substringToIndex:attributeValue.length - 2] floatValue];
+            number = [attributeValue substringToIndex:attributeValue.length - 2].floatValue;
         }
         else if ([attributeValue hasSuffix:@"%"])
         {
-            number = [[attributeValue substringToIndex:attributeValue.length - 1] floatValue] / 100.0;
+            number = [attributeValue substringToIndex:attributeValue.length - 1].floatValue / 100.0;
         }
         else
         {
-            number = [attributeValue floatValue];
+            number = attributeValue.floatValue;
         }
     }
 
@@ -939,13 +967,13 @@ didStartElement:(NSString *)elementName
     NSScanner *scanner = [NSScanner scannerWithString:attributeValue];
     NSCharacterSet *skipSet = [NSCharacterSet characterSetWithCharactersInString:@" \r\n,"];
     CGFloat value;
-    [scanner setCharactersToBeSkipped:skipSet];
+    scanner.charactersToBeSkipped = skipSet;
 
     while (1)
     {
         if ([scanner scanCGFloat:&value])
         {
-            [numbers addObject:[NSNumber numberWithFloat:value]];
+            [numbers addObject:@(value)];
         }
         else
         {

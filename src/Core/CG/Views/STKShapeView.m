@@ -15,18 +15,19 @@
  */
 
 //
-//  PXShapeView.m
+//  STKShapeView.m
 //  Pixate
 //
 //  Created by Kevin Lindsey on 5/30/12.
 //  Copyright (c) 2012 Pixate, Inc. All rights reserved.
 //
 
-#import "PXShapeView.h"
+#import "PixateFreestyle.h"
+#import "STKShapeView.h"
 #import "PXShapeGroup.h"
 #import "PXSVGLoader.h"
 
-@implementation PXShapeView
+@implementation STKShapeView
 
 #pragma mark - Setters
 
@@ -103,9 +104,9 @@
     return result;
 }
 
-- (void)loadSceneFromURL:(NSURL *)URL
+- (void)loadSceneFromURL:(NSURL*)URL
 {
-    // TODO: this has been exposed and when used directly, resourcePath will keep it's old value
+    _resourcePath = URL.absoluteString;
     self.document = [PXSVGLoader loadFromURL:URL];
 }
 

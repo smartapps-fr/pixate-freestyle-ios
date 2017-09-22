@@ -18,6 +18,7 @@
 //  PXStylerBase.h
 //  Pixate
 //
+//  Modified by Anton Matosov on 12/30/15.
 //  Created by Kevin Lindsey on 10/11/12.
 //  Copyright (c) 2012 Pixate, Inc. All rights reserved.
 //
@@ -53,11 +54,13 @@ typedef void(^PXDeclarationHandlerBlock)(PXDeclaration *declaration, PXStylerCon
  */
 @property (nonatomic, readonly) PXStylerCompletionBlock completionBlock;
 
+- (instancetype)init;
+
 /**
  *  Initialize a newly allocated instance.
  *
  *  @param block A block to invoke to apply styling from this styler
  */
--(id)initWithCompletionBlock:(PXStylerCompletionBlock)block;
+-(instancetype)initWithCompletionBlock:(PXStylerCompletionBlock)block NS_DESIGNATED_INITIALIZER;
 
 @end

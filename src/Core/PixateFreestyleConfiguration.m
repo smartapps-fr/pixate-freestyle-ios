@@ -18,6 +18,7 @@
 //  PixateConfiguration.m
 //  Pixate
 //
+//  Modified by Anton Matosov on 12/30/15.
 //  Created by Kevin Lindsey on 1/23/13.
 //  Copyright (c) 2013 Pixate, Inc. All rights reserved.
 //
@@ -32,28 +33,16 @@
 @implementation PixateFreestyleConfiguration
 {
     NSMutableDictionary *properties_;
-    NSArray *_styleClasses;
+    NSSet *_styleClasses;
 }
 
 @synthesize styleChangeable;
 
-#ifdef PX_LOGGING
-static int ddLogLevel = LOG_LEVEL_WARN;
-
-+ (int)ddLogLevel
-{
-    return ddLogLevel;
-}
-
-+ (void)ddSetLogLevel:(int)logLevel
-{
-    ddLogLevel = logLevel;
-}
-#endif
+STK_DEFINE_CLASS_LOG_LEVEL
 
 #pragma mark - Initializers
 
-- (id)init
+- (instancetype)init
 {
     if (self = [super init])
     {
@@ -64,6 +53,8 @@ static int ddLogLevel = LOG_LEVEL_WARN;
         _imageCacheCount = 10;
         _imageCacheSize = 0;
         _styleCacheCount = 10;
+
+        _styleMode = PXStylingNormal;
     }
 
     return self;
@@ -73,7 +64,7 @@ static int ddLogLevel = LOG_LEVEL_WARN;
 
 - (id)propertyValueForName:(NSString *)name
 {
-    return [properties_ objectForKey:name];
+    return properties_[name];
 }
 
 - (void)setPropertyValue:(id)value forName:(NSString *)name
@@ -85,7 +76,7 @@ static int ddLogLevel = LOG_LEVEL_WARN;
             properties_ = [[NSMutableDictionary alloc] init];
         }
 
-        [properties_ setObject:value forKey:name];
+        properties_[name] = value;
     }
 }
 
@@ -151,18 +142,16 @@ static int ddLogLevel = LOG_LEVEL_WARN;
     // trim leading and trailing whitespace
     _styleClass = [aClass stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     NSArray *classes = [_styleClass componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-    _styleClasses = [classes sortedArrayUsingComparator:^NSComparisonResult(NSString *class1, NSString *class2) {
-        return [class1 compare:class2];
-    }];
+    _styleClasses = [NSSet setWithArray:classes];
 }
 
-- (NSArray *)styleClasses {
+- (NSSet *)styleClasses {
     return _styleClasses;
 }
 
 - (NSString *)pxStyleElementName
 {
-    return @"pixate-config";
+    return @"stylingkit-config";
 }
 
 - (id)pxStyleParent
@@ -187,7 +176,7 @@ static int ddLogLevel = LOG_LEVEL_WARN;
 
 - (NSString *)styleKey
 {
-    return [PXStyleUtils selectorFromStyleable:self];
+    return [PXStyleUtils styleKeyFromStyleable:self];
 }
 
 - (void)setBounds:(CGRect)bounds
@@ -215,11 +204,11 @@ static int ddLogLevel = LOG_LEVEL_WARN;
                     PixateFreestyle.configuration.cacheStylesType = declaration.cacheStylesTypeValue;
 
                     // clear caches if they are off
-                    if (PixateFreestyle.configuration.cacheImages == NO)
+                    if (!PixateFreestyle.configuration.cacheImages)
                     {
                         [PixateFreestyle clearImageCache];
                     }
-                    if (PixateFreestyle.configuration.cacheStyles == NO)
+                    if (!PixateFreestyle.configuration.cacheStyles)
                     {
                         [PixateFreestyle clearStyleCache];
                     }
@@ -227,18 +216,23 @@ static int ddLogLevel = LOG_LEVEL_WARN;
                 @"image-cache-count" : ^(PXDeclaration *declaration, PXStylerContext *context) {
                     NSString *value = declaration.stringValue;
 
-                    PixateFreestyle.configuration.imageCacheCount = [value integerValue];
+                    PixateFreestyle.configuration.imageCacheCount = value.integerValue;
                 },
                 @"image-cache-size" : ^(PXDeclaration *declaration, PXStylerContext *context) {
                     NSString *value = declaration.stringValue;
 
-                    PixateFreestyle.configuration.imageCacheSize = [value integerValue];
+                    PixateFreestyle.configuration.imageCacheSize = value.integerValue;
                 },
                 @"style-cache-count" : ^(PXDeclaration *declaration, PXStylerContext *context) {
                     NSString *value = declaration.stringValue;
 
-                    PixateFreestyle.configuration.styleCacheCount = [value integerValue];
-                }
+                    PixateFreestyle.configuration.styleCacheCount = value.integerValue;
+                },
+              @"enabled" : ^(PXDeclaration* declaration, PXStylerContext* context) {
+                  BOOL value = declaration.booleanValue;
+
+                  PixateFreestyle.configuration.styleMode = value ? PXStylingNormal : PXStylingNone;
+              }
             }]
         ];
     });

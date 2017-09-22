@@ -18,32 +18,22 @@
 //  PXPseudoClassFunction.m
 //  Pixate
 //
+//  Modified by Anton Matosov on 12/30/15.
 //  Created by Kevin Lindsey on 11/27/12.
 //  Copyright (c) 2012 Pixate, Inc. All rights reserved.
 //
 
 #import "PXPseudoClassFunction.h"
 #import "PXStyleUtils.h"
+#import "PXLog.h"
 
 @implementation PXPseudoClassFunction
 
-#ifdef PX_LOGGING
-static int ddLogLevel = LOG_LEVEL_WARN;
-
-+ (int)ddLogLevel
-{
-    return ddLogLevel;
-}
-
-+ (void)ddSetLogLevel:(int)logLevel
-{
-    ddLogLevel = logLevel;
-}
-#endif
+STK_DEFINE_CLASS_LOG_LEVEL
 
 #pragma mark - Initializers
 
-- (id)initWithFunctionType:(PXPseudoClassFunctionType)type modulus:(NSInteger)modulus remainder:(NSInteger)remainder
+- (instancetype)initWithFunctionType:(PXPseudoClassFunctionType)type modulus:(NSInteger)modulus remainder:(NSInteger)remainder
 {
     if (self = [super init])
     {

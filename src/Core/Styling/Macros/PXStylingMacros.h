@@ -38,19 +38,15 @@
 #define PX_RECURSIVE 1
 #define PX_NONRECURSIVE 0
 
+// TODO: Optimize style updates on re-layout
 #define PX_LAYOUT_SUBVIEWS_OVERRIDE             PX_LAYOUT_SUBVIEWS_IMP(PX_NONRECURSIVE)
 #define PX_LAYOUT_SUBVIEWS_OVERRIDE_RECURSIVE   PX_LAYOUT_SUBVIEWS_IMP(PX_RECURSIVE)
 
 #define PX_LAYOUT_SUBVIEWS_IMP(RECURSE) \
 - (void)layoutSubviews	\
 {	\
-    callSuper0(SUPER_PREFIX, _cmd);	\
-    \
-    if(RECURSE) { \
-        [self updateStyles]; \
-    } else { \
-        [self updateStylesNonRecursively]; \
-    } \
+    callSuper0(SUPER_PREFIX, @selector(layoutSubviews));	\
+    [self stkUpdateStylesFromLayoutSubviewsRecursively:RECURSE]; \
 }
 
 #endif // Pixate_PXStylingMacros_h

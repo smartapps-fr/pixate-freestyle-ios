@@ -35,10 +35,10 @@
 #import "PXMPVolumeView.h"
 #import "PXUIActionSheet.h"
 #import "PXUIActivityIndicatorView.h"
-#import "PXUIButton.h"
+#import "STKUIButton.h"
 #import "PXUIDatePicker.h"
-#import "PXUIImageView.h"  
-#import "PXUILabel.h"
+#import "STKUIImageView.h"
+#import "STKUILabel.h"
 #import "PXUIPageControl.h"
 #import "PXUIPickerView.h"
 #import "PXUIProgressView.h"
@@ -56,6 +56,7 @@
 #import "PXUIView.h"
 #import "PXUIWebView.h"
 #import "PXUIWindow.h"
+#import "STK_UIAlertControllerView.h"
 
 @implementation PXForceLoadControls
 
@@ -72,10 +73,10 @@
     [PXMPVolumeView class];
     [PXUIActionSheet class];
     [PXUIActivityIndicatorView class];
-    [PXUIButton class];
+    [STKUIButton class];
     [PXUIDatePicker class];
-    [PXUIImageView class];
-    [PXUILabel class];
+    [STKUIImageView class];
+    [STKUILabel class];
     [PXUIPageControl class];
     [PXUIPickerView class];
     [PXUIProgressView class];
@@ -93,6 +94,7 @@
     [PXUIView class];
     [PXUIWebView class];
     [PXUIWindow class];
+    [STK_UIAlertControllerView class];
 }
 
 @end

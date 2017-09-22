@@ -18,6 +18,7 @@
 //  PXMediaGroup.m
 //  Pixate
 //
+//  Modified by Anton Matosov on 12/30/15.
 //  Created by Kevin Lindsey on 1/9/13.
 //  Copyright (c) 2013 Pixate, Inc. All rights reserved.
 //
@@ -35,7 +36,7 @@
 
 #pragma mark - Initializers
 
-- (id)initWithQuery:(id<PXMediaExpression>)query origin:(PXStylesheetOrigin)origin
+- (instancetype)initWithQuery:(id<PXMediaExpression>)query origin:(PXStylesheetOrigin)origin
 {
     if (self = [super init])
     {
@@ -50,25 +51,32 @@
 
 - (NSArray *)ruleSets
 {
-    return (ruleSets_) ? [NSArray arrayWithArray:ruleSets_] : nil;
+    return ruleSets_;
 }
 
 - (NSArray *)ruleSetsForStyleable:(id<PXStyleable>)styleable
 {
-    NSMutableArray *result = [NSMutableArray array];
-    NSMutableSet *items = [NSMutableSet set];
-
     // gather keys
     NSString *elementName = styleable.pxStyleElementName;
     NSString *styleId = styleable.styleId;
-    NSArray *styleClasses = styleable.styleClasses;
+    NSSet *styleClasses = styleable.styleClasses;
+
+    NSArray *ruleSetsForElement = ruleSetsByElementName_[elementName];
+    NSArray *ruleSetsForStyle = ruleSetsById_[styleId];
+
+    const NSUInteger capacity = [ruleSetsForElement count]
+        + [ruleSetsForStyle count]
+        + ruleSetsByClass_.count * styleClasses.count;
+
+    NSMutableArray *result = [NSMutableArray arrayWithCapacity:capacity];
+    NSMutableSet *items = [NSMutableSet setWithCapacity:capacity];
 
     // find relevant ruleSets by element name
     if (elementName.length > 0)
     {
-        for (PXRuleSet *ruleSet in [ruleSetsByElementName_ objectForKey:elementName])
+        for (PXRuleSet *ruleSet in ruleSetsForElement)
         {
-            if ([items containsObject:ruleSet] == NO)
+            if (![items containsObject:ruleSet])
             {
                 [result addObject:ruleSet];
                 [items addObject:ruleSet];
@@ -79,9 +87,9 @@
     // find relevant ruleSets by id
     if (styleId.length > 0)
     {
-        for (PXRuleSet *ruleSet in [ruleSetsById_ objectForKey:styleId])
+        for (PXRuleSet *ruleSet in ruleSetsForStyle)
         {
-            if ([items containsObject:ruleSet] == NO)
+            if (![items containsObject:ruleSet])
             {
                 [result addObject:ruleSet];
                 [items addObject:ruleSet];
@@ -90,17 +98,14 @@
     }
 
     // find relevant ruleSets by class
-    if (styleClasses.count > 0)
+    for (NSString *aClass in styleClasses)
     {
-        for (NSString *aClass in styleClasses)
+        for (PXRuleSet *ruleSet in ruleSetsByClass_[aClass])
         {
-            for (PXRuleSet *ruleSet in [ruleSetsByClass_ objectForKey:aClass])
+            if (![items containsObject:ruleSet])
             {
-                if ([items containsObject:ruleSet] == NO)
-                {
-                    [result addObject:ruleSet];
-                    [items addObject:ruleSet];
-                }
+                [result addObject:ruleSet];
+                [items addObject:ruleSet];
             }
         }
     }
@@ -112,14 +117,14 @@
         result = uncategorizedRuleSets_;
     }
 
-    return (result != nil) ? [NSArray arrayWithArray:result] : nil;
+    return result;
 }
 
 #pragma mark - Methods
 
 - (void)addRuleSet:(PXRuleSet *)ruleSet toPartition:(NSMutableDictionary *)partition withKey:(NSString *)key
 {
-    NSMutableArray *ruleSets = [partition objectForKey:key];
+    NSMutableArray *ruleSets = partition[key];
 
     // create ruleset array if we don't have one already
     if (ruleSets == nil)
@@ -130,7 +135,7 @@
         [ruleSets addObjectsFromArray:uncategorizedRuleSets_];
 
         // save the ruleSet array back to the partition dictionary
-        [partition setObject:ruleSets forKey:key];
+        partition[key] = ruleSets;
     }
 
     // add this ruleSet to the ruleSet array associated with the given key
@@ -157,11 +162,11 @@
         // the default to be true when typeSelector is nil
         NSString *elementName = (typeSelector == nil || typeSelector.hasUniversalType) ? nil : typeSelector.typeName;
         NSString *styleId = (typeSelector == nil) ? nil : typeSelector.styleId;
-        NSArray *styleClasses = (typeSelector == nil) ? nil : typeSelector.styleClasses;
+        NSSet *styleClasses = (typeSelector == nil) ? nil : typeSelector.styleClasses;
         BOOL added = NO;
 
         // NOTE: nesting if-statements to avoid walking type selector expressions for id and classes when not needed
-        if (elementName != nil && [@"*" isEqualToString:elementName] == NO)
+        if (elementName != nil && ![@"*" isEqualToString:elementName])
         {
             if (ruleSetsByElementName_ == nil) ruleSetsByElementName_ = [NSMutableDictionary dictionary];
             [self addRuleSet:ruleSet toPartition:ruleSetsByElementName_ withKey:elementName];
@@ -189,7 +194,7 @@
 
         // if this wasn't added to any of our partitions, then we need to collect it into the uncategorized partition
         // and add it to all other partitions to preserve rule set order in those sets as well
-        if (added == NO)
+        if (!added)
         {
             if (uncategorizedRuleSets_ == nil) uncategorizedRuleSets_ = [NSMutableArray array];
             [uncategorizedRuleSets_ addObject:ruleSet];
@@ -197,21 +202,21 @@
             // add uncategorized ruleSets to all partitions
             for (NSString *key in ruleSetsByElementName_.allKeys)
             {
-                NSMutableArray *items = [ruleSetsByElementName_ objectForKey:key];
+                NSMutableArray *items = ruleSetsByElementName_[key];
 
                 [items addObject:ruleSet];
             }
 
             for (NSString *key in ruleSetsById_.allKeys)
             {
-                NSMutableArray *items = [ruleSetsById_ objectForKey:key];
+                NSMutableArray *items = ruleSetsById_[key];
 
                 [items addObject:ruleSet];
             }
 
             for (NSString *key in ruleSetsByClass_.allKeys)
             {
-                NSMutableArray *items = [ruleSetsByClass_ objectForKey:key];
+                NSMutableArray *items = ruleSetsByClass_[key];
 
                 [items addObject:ruleSet];
             }
